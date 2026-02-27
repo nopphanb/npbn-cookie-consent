@@ -63,6 +63,9 @@ final class NPBN_Cookie_Consent {
 		if ( is_admin() ) {
 			require_once NPBN_COOKIE_CONSENT_DIR . 'includes/class-npbn-cookie-admin.php';
 			new NPBN_Cookie_Admin();
+
+			require_once NPBN_COOKIE_CONSENT_DIR . 'includes/class-npbn-cookie-updater.php';
+			new NPBN_Cookie_Updater();
 		}
 	}
 
