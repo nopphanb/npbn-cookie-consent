@@ -1,0 +1,13 @@
+/**
+ * NPBN Cookie Consent — Admin settings page styles.
+ *
+ * @package NPBN_Cookie_Consent
+ */
+
+.form-table .npbn-color-picker {
+	width: 80px;
+}
+
+.form-table textarea.large-text {
+	max-width: 600px;
+}

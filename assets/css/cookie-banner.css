@@ -1,0 +1,579 @@
+/**
+ * NPBN Cookie Consent — Frontend banner styles.
+ *
+ * All selectors prefixed with #npbn-cookie-banner or .npbn-cookie- to avoid conflicts.
+ * Colors are driven by CSS custom properties set via inline <style> from PHP settings.
+ */
+
+/* ============================================================
+   Banner container
+   ============================================================ */
+
+#npbn-cookie-banner {
+	--npbn-bg: #ffffff;
+	--npbn-text: #333333;
+	--npbn-btn-accept-bg: #16a34a;
+	--npbn-btn-accept-text: #ffffff;
+
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 999999;
+	box-sizing: border-box;
+	font-family: inherit;
+	font-size: 12px;
+	line-height: 1.6;
+	padding: 12px;
+	opacity: 0;
+	transform: translateY(20px);
+	visibility: hidden;
+	transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--top {
+	transform: translateY(-20px);
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--visible {
+	opacity: 1;
+	transform: translateY(0);
+	visibility: visible;
+}
+
+#npbn-cookie-banner *,
+#npbn-cookie-banner *::before,
+#npbn-cookie-banner *::after {
+	box-sizing: border-box;
+}
+
+/* ============================================================
+   Position variants
+   ============================================================ */
+
+#npbn-cookie-banner.npbn-cookie-banner--bottom {
+	bottom: 0;
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--top.npbn-cookie-banner--visible {
+	transform: translateY(0);
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--top {
+	top: 0;
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--modal {
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 16px;
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--modal .npbn-cookie-banner__inner {
+	max-width: 340px;
+	flex-direction: column;
+	text-align: center;
+}
+
+/* ============================================================
+   Inner wrapper — floating card
+   ============================================================ */
+
+.npbn-cookie-banner__inner {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 18px 26px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 26px;
+	background-color: var(--npbn-bg);
+	color: var(--npbn-text);
+	border-radius: 12px;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+/* ============================================================
+   Content
+   ============================================================ */
+
+.npbn-cookie-banner__content {
+	flex: 1;
+	min-width: 0;
+}
+
+.npbn-cookie-banner__heading {
+	margin: 0 0 2px;
+	font-size: 13px;
+	font-weight: 700;
+	color: inherit;
+	line-height: 1.4;
+}
+
+.npbn-cookie-banner__text {
+	margin: 0;
+	color: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.npbn-cookie-banner__link {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	margin-left: 4px;
+}
+
+.npbn-cookie-banner__link:hover,
+.npbn-cookie-banner__link:focus {
+	opacity: 0.7;
+}
+
+/* ============================================================
+   Action buttons
+   ============================================================ */
+
+.npbn-cookie-banner__actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-shrink: 0;
+}
+
+/* Reject — underlined text link style */
+.npbn-cookie-banner__btn--reject {
+	background: none;
+	border: none;
+	padding: 6px 4px;
+	color: var(--npbn-text);
+	font-weight: 600;
+	font-size: 12px;
+	line-height: 1.2;
+	cursor: pointer;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	font-family: inherit;
+	min-height: 36px;
+	display: inline-flex;
+	align-items: center;
+	transition: opacity 0.15s ease;
+}
+
+.npbn-cookie-banner__btn--reject:hover,
+.npbn-cookie-banner__btn--reject:focus-visible {
+	opacity: 0.7;
+}
+
+.npbn-cookie-banner__btn--reject:focus-visible {
+	outline: 2px solid var(--npbn-text);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* Accept — colored rounded button */
+.npbn-cookie-banner__btn--accept {
+	background-color: var(--npbn-btn-accept-bg);
+	color: var(--npbn-btn-accept-text);
+	border: none;
+	padding: 10px 22px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 12px;
+	line-height: 1.2;
+	min-height: 36px;
+	min-width: 36px;
+	text-align: center;
+	white-space: nowrap;
+	font-family: inherit;
+	transition: opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.npbn-cookie-banner__btn--accept:hover,
+.npbn-cookie-banner__btn--accept:focus-visible {
+	opacity: 0.9;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.npbn-cookie-banner__btn--accept:focus-visible {
+	outline: 2px solid var(--npbn-btn-accept-bg);
+	outline-offset: 2px;
+}
+
+/* ============================================================
+   "Cookie Settings" withdrawal button
+   ============================================================ */
+
+.npbn-cookie-settings-btn {
+	position: fixed;
+	bottom: 16px;
+	left: 16px;
+	z-index: 999998;
+	padding: 6px 12px;
+	background-color: var(--npbn-bg, #ffffff);
+	color: var(--npbn-text, #333333);
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	border-radius: 16px;
+	font-size: 10px;
+	font-weight: 500;
+	cursor: pointer;
+	font-family: inherit;
+	line-height: 1.2;
+	min-height: 28px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.npbn-cookie-settings-btn.npbn-cookie-settings-btn--visible {
+	opacity: 1;
+	visibility: visible;
+}
+
+.npbn-cookie-settings-btn:hover,
+.npbn-cookie-settings-btn:focus-visible {
+	opacity: 0.85;
+}
+
+.npbn-cookie-settings-btn:focus-visible {
+	outline: 2px solid var(--npbn-text, #333333);
+	outline-offset: 2px;
+}
+
+/* ============================================================
+   Responsive — stack on mobile
+   ============================================================ */
+
+@media (max-width: 640px) {
+	#npbn-cookie-banner {
+		padding: 10px;
+	}
+
+	.npbn-cookie-banner__inner {
+		flex-direction: column;
+		text-align: center;
+		padding: 16px;
+		gap: 12px;
+	}
+
+	.npbn-cookie-banner__actions {
+		width: 100%;
+		flex-direction: column-reverse;
+		gap: 8px;
+	}
+
+	.npbn-cookie-banner__btn--accept,
+	.npbn-cookie-banner__btn--settings {
+		width: 100%;
+	}
+}
+
+/* ============================================================
+   "Cookie Settings" button on banner — outlined style
+   ============================================================ */
+
+.npbn-cookie-banner__btn--settings {
+	background: none;
+	border: 1px solid var(--npbn-text);
+	padding: 10px 22px;
+	color: var(--npbn-text);
+	font-weight: 600;
+	font-size: 12px;
+	line-height: 1.2;
+	cursor: pointer;
+	border-radius: 6px;
+	font-family: inherit;
+	min-height: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	white-space: nowrap;
+	transition: opacity 0.15s ease;
+}
+
+.npbn-cookie-banner__btn--settings:hover,
+.npbn-cookie-banner__btn--settings:focus-visible {
+	opacity: 0.7;
+}
+
+.npbn-cookie-banner__btn--settings:focus-visible {
+	outline: 2px solid var(--npbn-text);
+	outline-offset: 2px;
+}
+
+/* ============================================================
+   Cookie Settings Modal (overlay)
+   ============================================================ */
+
+.npbn-cookie-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s;
+	font-family: inherit;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.npbn-cookie-modal--visible {
+	opacity: 1;
+	visibility: visible;
+}
+
+.npbn-cookie-modal *,
+.npbn-cookie-modal *::before,
+.npbn-cookie-modal *::after {
+	box-sizing: border-box;
+}
+
+.npbn-cookie-modal__overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.npbn-cookie-modal__dialog {
+	position: relative;
+	background: var(--npbn-bg, #ffffff);
+	color: var(--npbn-text, #333333);
+	border-radius: 12px;
+	box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+	max-width: 520px;
+	width: 90%;
+	max-height: 85vh;
+	display: flex;
+	flex-direction: column;
+	transform: translateY(20px);
+	transition: transform 0.3s ease;
+}
+
+.npbn-cookie-modal--visible .npbn-cookie-modal__dialog {
+	transform: translateY(0);
+}
+
+.npbn-cookie-modal__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px 24px 12px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.npbn-cookie-modal__title {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 700;
+	color: inherit;
+}
+
+.npbn-cookie-modal__close {
+	background: none;
+	border: none;
+	font-size: 24px;
+	line-height: 1;
+	cursor: pointer;
+	color: inherit;
+	opacity: 0.5;
+	padding: 4px 8px;
+	border-radius: 4px;
+	transition: opacity 0.15s ease;
+}
+
+.npbn-cookie-modal__close:hover,
+.npbn-cookie-modal__close:focus-visible {
+	opacity: 1;
+}
+
+.npbn-cookie-modal__body {
+	padding: 16px 24px;
+	overflow-y: auto;
+	flex: 1;
+}
+
+.npbn-cookie-modal__footer {
+	padding: 12px 24px 20px;
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+/* ============================================================
+   Category items in modal
+   ============================================================ */
+
+.npbn-cookie-modal__category {
+	padding: 14px 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.npbn-cookie-modal__category:last-child {
+	border-bottom: none;
+}
+
+.npbn-cookie-modal__category-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.npbn-cookie-modal__category-label {
+	font-weight: 600;
+	font-size: 13px;
+}
+
+.npbn-cookie-modal__category-desc {
+	margin: 6px 0 0;
+	font-size: 12px;
+	opacity: 0.7;
+	line-height: 1.5;
+}
+
+.npbn-cookie-modal__always-on {
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--npbn-btn-accept-bg, #16a34a);
+	margin-right: 8px;
+}
+
+.npbn-cookie-modal__category-toggle {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+/* ============================================================
+   Toggle switch
+   ============================================================ */
+
+.npbn-cookie-toggle {
+	position: relative;
+	display: inline-block;
+	width: 44px;
+	height: 24px;
+	cursor: pointer;
+}
+
+.npbn-cookie-toggle input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+.npbn-cookie-toggle__slider {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	border-radius: 24px;
+	transition: background-color 0.25s ease;
+}
+
+.npbn-cookie-toggle__slider::before {
+	content: '';
+	position: absolute;
+	height: 18px;
+	width: 18px;
+	left: 3px;
+	bottom: 3px;
+	background-color: #fff;
+	border-radius: 50%;
+	transition: transform 0.25s ease;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.npbn-cookie-toggle input:checked + .npbn-cookie-toggle__slider {
+	background-color: var(--npbn-btn-accept-bg, #16a34a);
+}
+
+.npbn-cookie-toggle input:checked + .npbn-cookie-toggle__slider::before {
+	transform: translateX(20px);
+}
+
+.npbn-cookie-toggle input:focus-visible + .npbn-cookie-toggle__slider {
+	outline: 2px solid var(--npbn-btn-accept-bg, #16a34a);
+	outline-offset: 2px;
+}
+
+/* ============================================================
+   Modal responsive
+   ============================================================ */
+
+@media (max-width: 640px) {
+	.npbn-cookie-modal__dialog {
+		width: 95%;
+		max-height: 90vh;
+	}
+
+	.npbn-cookie-modal__footer {
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.npbn-cookie-modal__footer .npbn-cookie-banner__btn--accept,
+	.npbn-cookie-modal__footer .npbn-cookie-banner__btn--settings,
+	.npbn-cookie-modal__footer .npbn-cookie-banner__btn--reject {
+		width: 100%;
+		justify-content: center;
+		text-align: center;
+	}
+}
+
+/* ============================================================
+   Shortcode [npbn_cookie_settings] — inline on-page toggles
+   ============================================================ */
+
+.npbn-cookie-shortcode {
+	font-family: inherit;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--npbn-text, #333333);
+}
+
+.npbn-cookie-shortcode *,
+.npbn-cookie-shortcode *::before,
+.npbn-cookie-shortcode *::after {
+	box-sizing: border-box;
+}
+
+.npbn-cookie-shortcode__body {
+	margin-bottom: 16px;
+}
+
+.npbn-cookie-shortcode__actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+	.npbn-cookie-shortcode__actions {
+		flex-direction: column;
+	}
+
+	.npbn-cookie-shortcode__actions .npbn-cookie-banner__btn--accept,
+	.npbn-cookie-shortcode__actions .npbn-cookie-banner__btn--settings,
+	.npbn-cookie-shortcode__actions .npbn-cookie-banner__btn--reject {
+		width: 100%;
+		justify-content: center;
+		text-align: center;
+	}
+}
