@@ -21,7 +21,7 @@ class NPBN_Cookie_Updater {
 	 *
 	 * @var string
 	 */
-	private $repo = 'nopphan/npbn-cookie-consent';
+	private $repo = 'nopphanb/npbn-cookie-consent';
 
 	/**
 	 * Plugin basename (e.g. npbn-cookie-consent/npbn-cookie-consent.php).

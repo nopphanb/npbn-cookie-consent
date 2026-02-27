@@ -22,7 +22,7 @@ PDPA-compliant cookie consent banner for WordPress. Auto-blocks third-party trac
 
 ## Installation
 
-1. Download the latest release zip from [Releases](https://github.com/nopphan/npbn-cookie-consent/releases)
+1. Download the latest release zip from [Releases](https://github.com/nopphanb/npbn-cookie-consent/releases)
 2. In WordPress admin, go to **Plugins > Add New > Upload Plugin**
 3. Upload the zip and activate
 
@@ -30,7 +30,7 @@ Or clone into your plugins directory:
 
 ```bash
 cd wp-content/plugins
-git clone https://github.com/nopphan/npbn-cookie-consent.git
+git clone https://github.com/nopphanb/npbn-cookie-consent.git
 ```
 
 ## Auto-Updates
