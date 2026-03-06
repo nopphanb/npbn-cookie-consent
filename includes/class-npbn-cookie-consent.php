@@ -139,17 +139,17 @@ final class NPBN_Cookie_Consent {
 				'showSettingsBtn'  => $this->get_setting( 'show_settings_btn' ) !== '0',
 				'categories'       => array(
 					'necessary'  => array(
-						'label'       => __( 'คุกกี้ที่จำเป็น', 'npbn-cookie-consent' ),
+						'label'       => __( 'คุกกี้ที่จำเป็นอย่างยิ่ง', 'npbn-cookie-consent' ),
 						'description' => $this->get_setting( 'category_desc_necessary' ),
 						'required'    => true,
 					),
 					'functional' => array(
-						'label'       => __( 'คุกกี้เพื่อการใช้งาน', 'npbn-cookie-consent' ),
+						'label'       => __( 'คุกกี้เพื่อการตั้งค่า', 'npbn-cookie-consent' ),
 						'description' => $this->get_setting( 'category_desc_functional' ),
 						'required'    => false,
 					),
 					'analytics'  => array(
-						'label'       => __( 'คุกกี้เพื่อการวิเคราะห์', 'npbn-cookie-consent' ),
+						'label'       => __( 'คุกกี้เพื่อการวิเคราะห์และวัดผล', 'npbn-cookie-consent' ),
 						'description' => $this->get_setting( 'category_desc_analytics' ),
 						'required'    => false,
 					),
@@ -178,13 +178,17 @@ final class NPBN_Cookie_Consent {
 		$text     = $this->get_setting( 'text_color', '#333333' );
 		$btn_bg   = $this->get_setting( 'btn_accept_bg', '#16a34a' );
 		$btn_text = $this->get_setting( 'btn_accept_text', '#ffffff' );
+		$blur     = $this->get_setting( 'backdrop_blur' );
+
+		$blur_val = ( '1' === $blur ) ? 'blur(8px)' : 'none';
 
 		printf(
-			'<style id="npbn-cookie-consent-vars">#npbn-cookie-banner,#npbn-cookie-modal{--npbn-bg:%s;--npbn-text:%s;--npbn-btn-accept-bg:%s;--npbn-btn-accept-text:%s}</style>',
+			'<style id="npbn-cookie-consent-vars">#npbn-cookie-banner,#npbn-cookie-modal{--npbn-bg:%s;--npbn-text:%s;--npbn-btn-accept-bg:%s;--npbn-btn-accept-text:%s;--npbn-backdrop-blur:%s}</style>',
 			esc_attr( $bg ),
 			esc_attr( $text ),
 			esc_attr( $btn_bg ),
-			esc_attr( $btn_text )
+			esc_attr( $btn_text ),
+			esc_attr( $blur_val )
 		);
 	}
 
@@ -202,6 +206,7 @@ final class NPBN_Cookie_Consent {
 		$privacy_url       = $this->get_setting( 'privacy_url' );
 		$modal_title       = $this->get_setting( 'settings_modal_title' );
 		$save_text         = $this->get_setting( 'save_preferences_text' );
+		$full_width        = $this->get_setting( 'banner_full_width' );
 
 		// Fall back to WordPress privacy policy page.
 		if ( empty( $privacy_url ) ) {
@@ -219,8 +224,14 @@ final class NPBN_Cookie_Consent {
 
 		// Banner (hidden by default via CSS opacity/visibility, JS adds --visible class to fade in).
 		?>
+		<?php
+		$banner_classes = 'npbn-cookie-banner npbn-cookie-banner--' . esc_attr( $position );
+		if ( '1' === $full_width ) {
+			$banner_classes .= ' npbn-cookie-banner--full-width';
+		}
+		?>
 		<div id="npbn-cookie-banner"
-			 class="npbn-cookie-banner npbn-cookie-banner--<?php echo esc_attr( $position ); ?>"
+			 class="<?php echo esc_attr( $banner_classes ); ?>"
 			 role="dialog"
 			 aria-modal="false"
 			 aria-label="<?php esc_attr_e( 'Cookie consent', 'npbn-cookie-consent' ); ?>"
@@ -305,7 +316,7 @@ final class NPBN_Cookie_Consent {
 					id="npbn-cookie-settings-btn"
 					class="npbn-cookie-settings-btn"
 					aria-label="<?php esc_attr_e( 'Cookie settings', 'npbn-cookie-consent' ); ?>">
-				<?php echo esc_html__( 'ตั้งค่าคุกกี้', 'npbn-cookie-consent' ); ?>
+				<?php echo esc_html__( 'เปลี่ยนการตั้งค่าคุกกี้', 'npbn-cookie-consent' ); ?>
 			</button>
 		<?php endif; ?>
 		<?php
@@ -353,14 +364,14 @@ final class NPBN_Cookie_Consent {
 	 */
 	public static function get_defaults() {
 		return array(
-			'banner_heading'           => __( 'เว็บไซต์นี้ใช้คุกกี้', 'npbn-cookie-consent' ),
-			'banner_text'              => __( 'เว็บไซต์นี้ใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานของคุณ กรุณายอมรับหรือปฏิเสธคุกกี้ที่ไม่จำเป็น', 'npbn-cookie-consent' ),
+			'banner_heading'           => __( 'เราใช้คุกกี้', 'npbn-cookie-consent' ),
+			'banner_text'              => __( 'เว็บไซต์นี้ใช้คุกกี้เพื่อให้เว็บไซต์ทำงานได้อย่างถูกต้อง จดจำการตั้งค่าของคุณ วิเคราะห์การใช้งานเว็บไซต์ และสนับสนุนการนำเสนอเนื้อหาและโฆษณาที่เหมาะสมกับความสนใจของคุณ คุณสามารถเลือกยอมรับทั้งหมด ปฏิเสธคุกกี้ที่ไม่จำเป็น หรือปรับแต่งการตั้งค่าได้ตามต้องการ', 'npbn-cookie-consent' ),
 			'accept_text'              => __( 'ยอมรับทั้งหมด', 'npbn-cookie-consent' ),
 			'reject_text'              => __( 'ตั้งค่าคุกกี้', 'npbn-cookie-consent' ),
-			'reject_all_text'          => __( 'ปฏิเสธ', 'npbn-cookie-consent' ),
+			'reject_all_text'          => __( 'ปฏิเสธคุกกี้ที่ไม่จำเป็น', 'npbn-cookie-consent' ),
 			'settings_modal_title'     => __( 'ตั้งค่าคุกกี้', 'npbn-cookie-consent' ),
 			'save_preferences_text'    => __( 'บันทึกการตั้งค่า', 'npbn-cookie-consent' ),
-			'privacy_link_text'        => __( 'นโยบายความเป็นส่วนตัว', 'npbn-cookie-consent' ),
+			'privacy_link_text'        => __( 'นโยบายคุกกี้', 'npbn-cookie-consent' ),
 			'privacy_url'              => '',
 			'position'                 => 'bottom',
 			'bg_color'                 => '#ffffff',
@@ -370,10 +381,12 @@ final class NPBN_Cookie_Consent {
 			'cookie_expiry'            => 365,
 			'show_settings_btn'        => '1',
 			'show_reject_all_banner'   => '1',
-			'category_desc_necessary'  => __( 'คุกกี้เหล่านี้จำเป็นสำหรับการทำงานของเว็บไซต์ ไม่สามารถปิดได้', 'npbn-cookie-consent' ),
-			'category_desc_functional' => __( 'คุกกี้เหล่านี้ช่วยให้เว็บไซต์จดจำการตั้งค่าของคุณ เช่น ภาษาและภูมิภาค', 'npbn-cookie-consent' ),
-			'category_desc_analytics'  => __( 'คุกกี้เหล่านี้ช่วยให้เราเข้าใจวิธีการใช้งานเว็บไซต์ เพื่อปรับปรุงประสิทธิภาพ', 'npbn-cookie-consent' ),
-			'category_desc_marketing'  => __( 'คุกกี้เหล่านี้ใช้เพื่อแสดงโฆษณาที่เกี่ยวข้องกับคุณ', 'npbn-cookie-consent' ),
+			'backdrop_blur'            => '0',
+			'banner_full_width'        => '0',
+			'category_desc_necessary'  => __( 'คุกกี้ประเภทนี้จำเป็นต่อการทำงานพื้นฐานของเว็บไซต์ ทำให้คุณสามารถใช้งานฟังก์ชันหลักต่าง ๆ ได้ เช่น การเข้าสู่ระบบ การรักษาความปลอดภัยของเว็บไซต์ การจดจำการตั้งค่าความเป็นส่วนตัว หรือการส่งแบบฟอร์ม หากไม่มีคุกกี้ประเภทนี้ เว็บไซต์อาจไม่สามารถทำงานได้อย่างถูกต้อง', 'npbn-cookie-consent' ),
+			'category_desc_functional' => __( 'คุกกี้ประเภทนี้ช่วยให้เว็บไซต์จดจำข้อมูลที่คุณเลือกไว้ เพื่อให้การใช้งานสะดวกและเหมาะสมกับคุณมากขึ้น เช่น ภาษา พื้นที่ให้บริการ หรือการตั้งค่าบางอย่างบนเว็บไซต์', 'npbn-cookie-consent' ),
+			'category_desc_analytics'  => __( 'คุกกี้ประเภทนี้ช่วยให้เราเข้าใจวิธีที่ผู้ใช้งานเข้ามาใช้งานเว็บไซต์ เช่น หน้าที่มีผู้เข้าชมมาก ระยะเวลาในการเข้าชม แหล่งที่มาของผู้เข้าชม หรือพฤติกรรมการใช้งานโดยรวม ข้อมูลดังกล่าวจะช่วยให้เราปรับปรุงเว็บไซต์ เนื้อหา และประสิทธิภาพการใช้งานให้ดียิ่งขึ้น', 'npbn-cookie-consent' ),
+			'category_desc_marketing'  => __( 'คุกกี้ประเภทนี้ใช้เพื่อบันทึกพฤติกรรมการเข้าชมเว็บไซต์ของคุณ เพื่อนำไปใช้ในการนำเสนอเนื้อหา โปรโมชั่น หรือโฆษณาที่สอดคล้องกับความสนใจของคุณมากขึ้น รวมถึงใช้วัดผลประสิทธิภาพของแคมเปญโฆษณาบนแพลตฟอร์มต่าง ๆ', 'npbn-cookie-consent' ),
 		);
 	}
 

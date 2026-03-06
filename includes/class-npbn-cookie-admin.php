@@ -307,6 +307,30 @@ class NPBN_Cookie_Admin {
 			)
 		);
 
+		add_settings_field(
+			'banner_full_width',
+			__( 'Full Width Banner', 'npbn-cookie-consent' ),
+			array( $this, 'render_checkbox_field' ),
+			'npbn-cookie-consent',
+			'npbn_appearance',
+			array(
+				'key'         => 'banner_full_width',
+				'description' => __( 'Display the banner as an edge-to-edge bar instead of a floating card.', 'npbn-cookie-consent' ),
+			)
+		);
+
+		add_settings_field(
+			'backdrop_blur',
+			__( 'Backdrop Blur', 'npbn-cookie-consent' ),
+			array( $this, 'render_checkbox_field' ),
+			'npbn-cookie-consent',
+			'npbn_appearance',
+			array(
+				'key'         => 'backdrop_blur',
+				'description' => __( 'Apply a blur effect on the background when the settings modal is open.', 'npbn-cookie-consent' ),
+			)
+		);
+
 		// --- Section: Cookie Category Descriptions ---
 		add_settings_section(
 			'npbn_category_descriptions',
@@ -386,6 +410,8 @@ class NPBN_Cookie_Admin {
 		$sanitized['cookie_expiry']    = min( 730, max( 1, absint( $input['cookie_expiry'] ?? 365 ) ) );
 		$sanitized['show_settings_btn']      = ! empty( $input['show_settings_btn'] ) ? '1' : '0';
 		$sanitized['show_reject_all_banner'] = ! empty( $input['show_reject_all_banner'] ) ? '1' : '0';
+		$sanitized['banner_full_width']      = ! empty( $input['banner_full_width'] ) ? '1' : '0';
+		$sanitized['backdrop_blur']          = ! empty( $input['backdrop_blur'] ) ? '1' : '0';
 
 		$sanitized['reject_all_text']       = sanitize_text_field( $input['reject_all_text'] ?? '' );
 		$sanitized['settings_modal_title']  = sanitize_text_field( $input['settings_modal_title'] ?? '' );
@@ -1051,8 +1077,7 @@ class NPBN_Cookie_Admin {
 		$value       = $this->get_value( $key );
 		$description = $args['description'] ?? '';
 
-		// Default to enabled if not yet saved.
-		$checked = ( '' === $value || '1' === $value ) ? 'checked' : '';
+		$checked = ( '1' === $value ) ? 'checked' : '';
 
 		printf(
 			'<label><input type="checkbox" name="%s[%s]" id="npbn-%s" value="1" %s> %s</label>',

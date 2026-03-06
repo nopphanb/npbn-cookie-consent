@@ -21,13 +21,13 @@
 	z-index: 999999;
 	box-sizing: border-box;
 	font-family: inherit;
-	font-size: 12px;
-	line-height: 1.6;
-	padding: 12px;
+	font-size: 13px;
+	line-height: 1.5;
+	padding: 16px;
 	opacity: 0;
 	transform: translateY(20px);
 	visibility: hidden;
-	transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+	transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
 }
 
 #npbn-cookie-banner.npbn-cookie-banner--top {
@@ -70,27 +70,46 @@
 }
 
 #npbn-cookie-banner.npbn-cookie-banner--modal .npbn-cookie-banner__inner {
-	max-width: 340px;
+	max-width: 360px;
 	flex-direction: column;
 	text-align: center;
 }
 
 /* ============================================================
-   Inner wrapper — floating card
+   Inner wrapper — floating card (default)
    ============================================================ */
 
 .npbn-cookie-banner__inner {
 	max-width: 960px;
 	margin: 0 auto;
-	padding: 18px 26px;
+	padding: 20px 28px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 26px;
+	gap: 24px;
 	background-color: var(--npbn-bg);
 	color: var(--npbn-text);
-	border-radius: 12px;
-	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04);
+	border-radius: 14px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+/* ============================================================
+   Full-width variant — edge-to-edge bar
+   ============================================================ */
+
+#npbn-cookie-banner.npbn-cookie-banner--full-width {
+	padding: 0;
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--full-width .npbn-cookie-banner__inner {
+	max-width: none;
+	border-radius: 0;
+	box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.06);
+	padding: 16px 28px;
+}
+
+#npbn-cookie-banner.npbn-cookie-banner--top.npbn-cookie-banner--full-width .npbn-cookie-banner__inner {
+	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* ============================================================
@@ -103,8 +122,8 @@
 }
 
 .npbn-cookie-banner__heading {
-	margin: 0 0 2px;
-	font-size: 13px;
+	margin: 0 0 4px;
+	font-size: 14px;
 	font-weight: 700;
 	color: inherit;
 	line-height: 1.4;
@@ -113,6 +132,7 @@
 .npbn-cookie-banner__text {
 	margin: 0;
 	color: inherit;
+	opacity: 0.85;
 	font-size: inherit;
 	line-height: inherit;
 }
@@ -136,7 +156,7 @@
 .npbn-cookie-banner__actions {
 	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 10px;
 	flex-shrink: 0;
 }
 
@@ -144,24 +164,24 @@
 .npbn-cookie-banner__btn--reject {
 	background: none;
 	border: none;
-	padding: 6px 4px;
+	padding: 8px 4px;
 	color: var(--npbn-text);
-	font-weight: 600;
-	font-size: 12px;
+	font-weight: 500;
+	font-size: 13px;
 	line-height: 1.2;
 	cursor: pointer;
 	text-decoration: underline;
 	text-underline-offset: 3px;
 	font-family: inherit;
-	min-height: 36px;
+	min-height: 38px;
 	display: inline-flex;
 	align-items: center;
-	transition: opacity 0.15s ease;
+	transition: opacity 0.2s ease;
 }
 
 .npbn-cookie-banner__btn--reject:hover,
 .npbn-cookie-banner__btn--reject:focus-visible {
-	opacity: 0.7;
+	opacity: 0.65;
 }
 
 .npbn-cookie-banner__btn--reject:focus-visible {
@@ -175,24 +195,27 @@
 	background-color: var(--npbn-btn-accept-bg);
 	color: var(--npbn-btn-accept-text);
 	border: none;
-	padding: 10px 22px;
-	border-radius: 6px;
+	padding: 10px 24px;
+	border-radius: 8px;
 	cursor: pointer;
 	font-weight: 600;
-	font-size: 12px;
+	font-size: 13px;
 	line-height: 1.2;
-	min-height: 36px;
-	min-width: 36px;
+	min-height: 38px;
+	min-width: 38px;
 	text-align: center;
 	white-space: nowrap;
 	font-family: inherit;
-	transition: opacity 0.15s ease, box-shadow 0.15s ease;
+	transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
-.npbn-cookie-banner__btn--accept:hover,
-.npbn-cookie-banner__btn--accept:focus-visible {
-	opacity: 0.9;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+.npbn-cookie-banner__btn--accept:hover {
+	opacity: 0.92;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.npbn-cookie-banner__btn--accept:active {
+	transform: scale(0.98);
 }
 
 .npbn-cookie-banner__btn--accept:focus-visible {
@@ -201,7 +224,7 @@
 }
 
 /* ============================================================
-   "Cookie Settings" withdrawal button
+   "Cookie Settings" withdrawal button (floating)
    ============================================================ */
 
 .npbn-cookie-settings-btn {
@@ -209,21 +232,21 @@
 	bottom: 16px;
 	left: 16px;
 	z-index: 999998;
-	padding: 6px 12px;
+	padding: 7px 14px;
 	background-color: var(--npbn-bg, #ffffff);
 	color: var(--npbn-text, #333333);
-	border: 1px solid rgba(0, 0, 0, 0.12);
-	border-radius: 16px;
-	font-size: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 20px;
+	font-size: 11px;
 	font-weight: 500;
 	cursor: pointer;
 	font-family: inherit;
 	line-height: 1.2;
-	min-height: 28px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	min-height: 30px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 	opacity: 0;
 	visibility: hidden;
-	transition: opacity 0.3s ease, visibility 0.3s;
+	transition: opacity 0.3s ease, visibility 0.3s, transform 0.2s ease;
 }
 
 .npbn-cookie-settings-btn.npbn-cookie-settings-btn--visible {
@@ -231,9 +254,9 @@
 	visibility: visible;
 }
 
-.npbn-cookie-settings-btn:hover,
-.npbn-cookie-settings-btn:focus-visible {
-	opacity: 0.85;
+.npbn-cookie-settings-btn:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 .npbn-cookie-settings-btn:focus-visible {
@@ -250,11 +273,15 @@
 		padding: 10px;
 	}
 
+	#npbn-cookie-banner.npbn-cookie-banner--full-width {
+		padding: 0;
+	}
+
 	.npbn-cookie-banner__inner {
 		flex-direction: column;
 		text-align: center;
-		padding: 16px;
-		gap: 12px;
+		padding: 18px;
+		gap: 14px;
 	}
 
 	.npbn-cookie-banner__actions {
@@ -275,26 +302,29 @@
 
 .npbn-cookie-banner__btn--settings {
 	background: none;
-	border: 1px solid var(--npbn-text);
-	padding: 10px 22px;
+	border: 1.5px solid var(--npbn-text);
+	padding: 10px 24px;
 	color: var(--npbn-text);
 	font-weight: 600;
-	font-size: 12px;
+	font-size: 13px;
 	line-height: 1.2;
 	cursor: pointer;
-	border-radius: 6px;
+	border-radius: 8px;
 	font-family: inherit;
-	min-height: 36px;
+	min-height: 38px;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	white-space: nowrap;
-	transition: opacity 0.15s ease;
+	transition: opacity 0.2s ease, transform 0.15s ease;
 }
 
-.npbn-cookie-banner__btn--settings:hover,
-.npbn-cookie-banner__btn--settings:focus-visible {
+.npbn-cookie-banner__btn--settings:hover {
 	opacity: 0.7;
+}
+
+.npbn-cookie-banner__btn--settings:active {
+	transform: scale(0.98);
 }
 
 .npbn-cookie-banner__btn--settings:focus-visible {
@@ -341,39 +371,41 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: rgba(0, 0, 0, 0.5);
+	background: rgba(0, 0, 0, 0.4);
+	-webkit-backdrop-filter: var(--npbn-backdrop-blur, none);
+	backdrop-filter: var(--npbn-backdrop-blur, none);
 }
 
 .npbn-cookie-modal__dialog {
 	position: relative;
 	background: var(--npbn-bg, #ffffff);
 	color: var(--npbn-text, #333333);
-	border-radius: 12px;
-	box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+	border-radius: 16px;
+	box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
 	max-width: 520px;
 	width: 90%;
 	max-height: 85vh;
 	display: flex;
 	flex-direction: column;
-	transform: translateY(20px);
+	transform: translateY(20px) scale(0.97);
 	transition: transform 0.3s ease;
 }
 
 .npbn-cookie-modal--visible .npbn-cookie-modal__dialog {
-	transform: translateY(0);
+	transform: translateY(0) scale(1);
 }
 
 .npbn-cookie-modal__header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 20px 24px 12px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	padding: 22px 24px 14px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .npbn-cookie-modal__title {
 	margin: 0;
-	font-size: 16px;
+	font-size: 17px;
 	font-weight: 700;
 	color: inherit;
 }
@@ -381,19 +413,20 @@
 .npbn-cookie-modal__close {
 	background: none;
 	border: none;
-	font-size: 24px;
+	font-size: 22px;
 	line-height: 1;
 	cursor: pointer;
 	color: inherit;
-	opacity: 0.5;
+	opacity: 0.4;
 	padding: 4px 8px;
-	border-radius: 4px;
-	transition: opacity 0.15s ease;
+	border-radius: 6px;
+	transition: opacity 0.2s ease, background-color 0.2s ease;
 }
 
 .npbn-cookie-modal__close:hover,
 .npbn-cookie-modal__close:focus-visible {
-	opacity: 1;
+	opacity: 0.8;
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .npbn-cookie-modal__body {
@@ -403,8 +436,8 @@
 }
 
 .npbn-cookie-modal__footer {
-	padding: 12px 24px 20px;
-	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	padding: 14px 24px 22px;
+	border-top: 1px solid rgba(0, 0, 0, 0.06);
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
@@ -417,7 +450,7 @@
 
 .npbn-cookie-modal__category {
 	padding: 14px 0;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .npbn-cookie-modal__category:last-child {
@@ -439,7 +472,7 @@
 .npbn-cookie-modal__category-desc {
 	margin: 6px 0 0;
 	font-size: 12px;
-	opacity: 0.7;
+	opacity: 0.6;
 	line-height: 1.5;
 }
 
@@ -481,7 +514,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #ccc;
+	background-color: #d1d5db;
 	border-radius: 24px;
 	transition: background-color 0.25s ease;
 }
@@ -496,7 +529,7 @@
 	background-color: #fff;
 	border-radius: 50%;
 	transition: transform 0.25s ease;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 .npbn-cookie-toggle input:checked + .npbn-cookie-toggle__slider {
