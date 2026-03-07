@@ -139,22 +139,22 @@ final class NPBN_Cookie_Consent {
 				'showSettingsBtn'  => $this->get_setting( 'show_settings_btn' ) !== '0',
 				'categories'       => array(
 					'necessary'  => array(
-						'label'       => __( 'คุกกี้ที่จำเป็นอย่างยิ่ง', 'npbn-cookie-consent' ),
+						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Strictly Necessary' : 'คุกกี้ที่จำเป็นอย่างยิ่ง',
 						'description' => $this->get_setting( 'category_desc_necessary' ),
 						'required'    => true,
 					),
 					'functional' => array(
-						'label'       => __( 'คุกกี้เพื่อการตั้งค่า', 'npbn-cookie-consent' ),
+						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Functional' : 'คุกกี้เพื่อการตั้งค่า',
 						'description' => $this->get_setting( 'category_desc_functional' ),
 						'required'    => false,
 					),
 					'analytics'  => array(
-						'label'       => __( 'คุกกี้เพื่อการวิเคราะห์และวัดผล', 'npbn-cookie-consent' ),
+						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Analytics' : 'คุกกี้เพื่อการวิเคราะห์และวัดผล',
 						'description' => $this->get_setting( 'category_desc_analytics' ),
 						'required'    => false,
 					),
 					'marketing'  => array(
-						'label'       => __( 'คุกกี้เพื่อการตลาด', 'npbn-cookie-consent' ),
+						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Marketing' : 'คุกกี้เพื่อการตลาด',
 						'description' => $this->get_setting( 'category_desc_marketing' ),
 						'required'    => false,
 					),
@@ -164,7 +164,7 @@ final class NPBN_Cookie_Consent {
 					'savePreferences' => $this->get_setting( 'save_preferences_text' ),
 					'acceptAll'       => $this->get_setting( 'accept_text' ),
 					'rejectAll'       => $this->get_setting( 'reject_all_text' ),
-					'alwaysOn'        => __( 'เปิดใช้งานเสมอ', 'npbn-cookie-consent' ),
+					'alwaysOn'        => 'en' === $this->get_setting( 'plugin_language' ) ? 'Always On' : 'เปิดใช้งานเสมอ',
 				),
 			)
 		);
@@ -316,7 +316,7 @@ final class NPBN_Cookie_Consent {
 					id="npbn-cookie-settings-btn"
 					class="npbn-cookie-settings-btn"
 					aria-label="<?php esc_attr_e( 'Cookie settings', 'npbn-cookie-consent' ); ?>">
-				<?php echo esc_html__( 'เปลี่ยนการตั้งค่าคุกกี้', 'npbn-cookie-consent' ); ?>
+				<?php echo 'en' === $this->get_setting( 'plugin_language' ) ? esc_html( 'Manage Cookie Preferences' ) : esc_html( 'เปลี่ยนการตั้งค่าคุกกี้' ); ?>
 			</button>
 		<?php endif; ?>
 		<?php
@@ -362,32 +362,61 @@ final class NPBN_Cookie_Consent {
 	 *
 	 * @return array
 	 */
-	public static function get_defaults() {
-		return array(
-			'banner_heading'           => __( 'เราใช้คุกกี้', 'npbn-cookie-consent' ),
-			'banner_text'              => __( 'เว็บไซต์นี้ใช้คุกกี้เพื่อให้เว็บไซต์ทำงานได้อย่างถูกต้อง จดจำการตั้งค่าของคุณ วิเคราะห์การใช้งานเว็บไซต์ และสนับสนุนการนำเสนอเนื้อหาและโฆษณาที่เหมาะสมกับความสนใจของคุณ คุณสามารถเลือกยอมรับทั้งหมด ปฏิเสธคุกกี้ที่ไม่จำเป็น หรือปรับแต่งการตั้งค่าได้ตามต้องการ', 'npbn-cookie-consent' ),
-			'accept_text'              => __( 'ยอมรับทั้งหมด', 'npbn-cookie-consent' ),
-			'reject_text'              => __( 'ตั้งค่าคุกกี้', 'npbn-cookie-consent' ),
-			'reject_all_text'          => __( 'ปฏิเสธคุกกี้ที่ไม่จำเป็น', 'npbn-cookie-consent' ),
-			'settings_modal_title'     => __( 'ตั้งค่าคุกกี้', 'npbn-cookie-consent' ),
-			'save_preferences_text'    => __( 'บันทึกการตั้งค่า', 'npbn-cookie-consent' ),
-			'privacy_link_text'        => __( 'นโยบายคุกกี้', 'npbn-cookie-consent' ),
-			'privacy_url'              => '',
-			'position'                 => 'bottom',
-			'bg_color'                 => '#ffffff',
-			'text_color'               => '#333333',
-			'btn_accept_bg'            => '#16a34a',
-			'btn_accept_text'          => '#ffffff',
-			'cookie_expiry'            => 365,
-			'show_settings_btn'        => '1',
-			'show_reject_all_banner'   => '1',
-			'backdrop_blur'            => '0',
-			'banner_full_width'        => '0',
-			'category_desc_necessary'  => __( 'คุกกี้ประเภทนี้จำเป็นต่อการทำงานพื้นฐานของเว็บไซต์ ทำให้คุณสามารถใช้งานฟังก์ชันหลักต่าง ๆ ได้ เช่น การเข้าสู่ระบบ การรักษาความปลอดภัยของเว็บไซต์ การจดจำการตั้งค่าความเป็นส่วนตัว หรือการส่งแบบฟอร์ม หากไม่มีคุกกี้ประเภทนี้ เว็บไซต์อาจไม่สามารถทำงานได้อย่างถูกต้อง', 'npbn-cookie-consent' ),
-			'category_desc_functional' => __( 'คุกกี้ประเภทนี้ช่วยให้เว็บไซต์จดจำข้อมูลที่คุณเลือกไว้ เพื่อให้การใช้งานสะดวกและเหมาะสมกับคุณมากขึ้น เช่น ภาษา พื้นที่ให้บริการ หรือการตั้งค่าบางอย่างบนเว็บไซต์', 'npbn-cookie-consent' ),
-			'category_desc_analytics'  => __( 'คุกกี้ประเภทนี้ช่วยให้เราเข้าใจวิธีที่ผู้ใช้งานเข้ามาใช้งานเว็บไซต์ เช่น หน้าที่มีผู้เข้าชมมาก ระยะเวลาในการเข้าชม แหล่งที่มาของผู้เข้าชม หรือพฤติกรรมการใช้งานโดยรวม ข้อมูลดังกล่าวจะช่วยให้เราปรับปรุงเว็บไซต์ เนื้อหา และประสิทธิภาพการใช้งานให้ดียิ่งขึ้น', 'npbn-cookie-consent' ),
-			'category_desc_marketing'  => __( 'คุกกี้ประเภทนี้ใช้เพื่อบันทึกพฤติกรรมการเข้าชมเว็บไซต์ของคุณ เพื่อนำไปใช้ในการนำเสนอเนื้อหา โปรโมชั่น หรือโฆษณาที่สอดคล้องกับความสนใจของคุณมากขึ้น รวมถึงใช้วัดผลประสิทธิภาพของแคมเปญโฆษณาบนแพลตฟอร์มต่าง ๆ', 'npbn-cookie-consent' ),
+	public static function get_defaults( $lang = null ) {
+		if ( null === $lang ) {
+			$settings = get_option( 'npbn_cookie_consent_settings', array() );
+			$lang     = $settings['plugin_language'] ?? 'th';
+		}
+
+		$shared = array(
+			'plugin_language'        => 'th',
+			'privacy_url'            => '',
+			'position'               => 'bottom',
+			'bg_color'               => '#ffffff',
+			'text_color'             => '#333333',
+			'btn_accept_bg'          => '#16a34a',
+			'btn_accept_text'        => '#ffffff',
+			'cookie_expiry'          => 365,
+			'show_settings_btn'      => '1',
+			'show_reject_all_banner' => '1',
+			'backdrop_blur'          => '0',
+			'banner_full_width'      => '0',
 		);
+
+		$text = array(
+			'th' => array(
+				'banner_heading'           => 'เราใช้คุกกี้',
+				'banner_text'              => 'เว็บไซต์นี้ใช้คุกกี้เพื่อให้เว็บไซต์ทำงานได้อย่างถูกต้อง จดจำการตั้งค่าของคุณ วิเคราะห์การใช้งานเว็บไซต์ และสนับสนุนการนำเสนอเนื้อหาและโฆษณาที่เหมาะสมกับความสนใจของคุณ คุณสามารถเลือกยอมรับทั้งหมด ปฏิเสธคุกกี้ที่ไม่จำเป็น หรือปรับแต่งการตั้งค่าได้ตามต้องการ',
+				'accept_text'              => 'ยอมรับทั้งหมด',
+				'reject_text'              => 'ตั้งค่าคุกกี้',
+				'reject_all_text'          => 'ปฏิเสธคุกกี้ที่ไม่จำเป็น',
+				'settings_modal_title'     => 'ตั้งค่าคุกกี้',
+				'save_preferences_text'    => 'บันทึกการตั้งค่า',
+				'privacy_link_text'        => 'นโยบายคุกกี้',
+				'category_desc_necessary'  => 'คุกกี้ประเภทนี้จำเป็นต่อการทำงานพื้นฐานของเว็บไซต์ ทำให้คุณสามารถใช้งานฟังก์ชันหลักต่าง ๆ ได้ เช่น การเข้าสู่ระบบ การรักษาความปลอดภัยของเว็บไซต์ การจดจำการตั้งค่าความเป็นส่วนตัว หรือการส่งแบบฟอร์ม หากไม่มีคุกกี้ประเภทนี้ เว็บไซต์อาจไม่สามารถทำงานได้อย่างถูกต้อง',
+				'category_desc_functional' => 'คุกกี้ประเภทนี้ช่วยให้เว็บไซต์จดจำข้อมูลที่คุณเลือกไว้ เพื่อให้การใช้งานสะดวกและเหมาะสมกับคุณมากขึ้น เช่น ภาษา พื้นที่ให้บริการ หรือการตั้งค่าบางอย่างบนเว็บไซต์',
+				'category_desc_analytics'  => 'คุกกี้ประเภทนี้ช่วยให้เราเข้าใจวิธีที่ผู้ใช้งานเข้ามาใช้งานเว็บไซต์ เช่น หน้าที่มีผู้เข้าชมมาก ระยะเวลาในการเข้าชม แหล่งที่มาของผู้เข้าชม หรือพฤติกรรมการใช้งานโดยรวม ข้อมูลดังกล่าวจะช่วยให้เราปรับปรุงเว็บไซต์ เนื้อหา และประสิทธิภาพการใช้งานให้ดียิ่งขึ้น',
+				'category_desc_marketing'  => 'คุกกี้ประเภทนี้ใช้เพื่อบันทึกพฤติกรรมการเข้าชมเว็บไซต์ของคุณ เพื่อนำไปใช้ในการนำเสนอเนื้อหา โปรโมชั่น หรือโฆษณาที่สอดคล้องกับความสนใจของคุณมากขึ้น รวมถึงใช้วัดผลประสิทธิภาพของแคมเปญโฆษณาบนแพลตฟอร์มต่าง ๆ',
+			),
+			'en' => array(
+				'banner_heading'           => 'We use cookies',
+				'banner_text'              => 'This website uses cookies to ensure proper functionality, remember your preferences, analyze site usage, and support relevant content and advertising. You can accept all, reject non-essential cookies, or customize your preferences.',
+				'accept_text'              => 'Accept All',
+				'reject_text'              => 'Cookie Settings',
+				'reject_all_text'          => 'Reject Non-Essential',
+				'settings_modal_title'     => 'Cookie Settings',
+				'save_preferences_text'    => 'Save Preferences',
+				'privacy_link_text'        => 'Cookie Policy',
+				'category_desc_necessary'  => 'These cookies are essential for the website to function properly. They enable core features such as login, security, privacy settings, and form submissions. Without these cookies, the website may not work correctly.',
+				'category_desc_functional' => 'These cookies help the website remember your choices to provide a more convenient and personalized experience, such as language, region, or other site preferences.',
+				'category_desc_analytics'  => 'These cookies help us understand how visitors use the website, such as which pages are most popular, visit duration, traffic sources, and overall usage patterns. This data helps us improve the website, content, and user experience.',
+				'category_desc_marketing'  => 'These cookies track your browsing behavior to deliver content, promotions, or ads relevant to your interests, and to measure the effectiveness of advertising campaigns across various platforms.',
+			),
+		);
+
+		$lang_text = $text[ $lang ] ?? $text['th'];
+
+		return array_merge( $shared, $lang_text );
 	}
 
 	/**

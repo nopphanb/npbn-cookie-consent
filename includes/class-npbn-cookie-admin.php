@@ -271,6 +271,21 @@ class NPBN_Cookie_Admin {
 		);
 
 		add_settings_field(
+			'plugin_language',
+			__( 'Language', 'npbn-cookie-consent' ),
+			array( $this, 'render_select_field' ),
+			'npbn-cookie-consent',
+			'npbn_general_settings',
+			array(
+				'key'     => 'plugin_language',
+				'options' => array(
+					'th' => 'ไทย (Thai)',
+					'en' => 'English',
+				),
+			)
+		);
+
+		add_settings_field(
 			'cookie_expiry',
 			__( 'Cookie Expiry (days)', 'npbn-cookie-consent' ),
 			array( $this, 'render_number_field' ),
@@ -407,7 +422,11 @@ class NPBN_Cookie_Admin {
 			$sanitized[ $field ] = sanitize_hex_color( $input[ $field ] ?? '' );
 		}
 
-		$sanitized['cookie_expiry']    = min( 730, max( 1, absint( $input['cookie_expiry'] ?? 365 ) ) );
+		$valid_languages                 = array( 'th', 'en' );
+		$sanitized['plugin_language']    = in_array( $input['plugin_language'] ?? '', $valid_languages, true )
+			? $input['plugin_language']
+			: 'th';
+		$sanitized['cookie_expiry']      = min( 730, max( 1, absint( $input['cookie_expiry'] ?? 365 ) ) );
 		$sanitized['show_settings_btn']      = ! empty( $input['show_settings_btn'] ) ? '1' : '0';
 		$sanitized['show_reject_all_banner'] = ! empty( $input['show_reject_all_banner'] ) ? '1' : '0';
 		$sanitized['banner_full_width']      = ! empty( $input['banner_full_width'] ) ? '1' : '0';
@@ -515,7 +534,8 @@ class NPBN_Cookie_Admin {
 		check_admin_referer( 'npbn_reset_defaults_action' );
 
 		$settings = get_option( $this->option_key, array() );
-		$defaults = NPBN_Cookie_Consent::get_defaults();
+		$lang     = $settings['plugin_language'] ?? 'th';
+		$defaults = NPBN_Cookie_Consent::get_defaults( $lang );
 
 		$text_keys = array(
 			'banner_heading',
