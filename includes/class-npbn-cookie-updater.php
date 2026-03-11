@@ -54,6 +54,11 @@ class NPBN_Cookie_Updater {
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 		add_filter( 'plugins_api', array( $this, 'plugin_info' ), 10, 3 );
 		add_filter( 'upgrader_post_install', array( $this, 'post_install' ), 10, 3 );
+
+		// "Check for updates" link on the plugins page.
+		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'add_check_update_link' ) );
+		add_action( 'wp_ajax_npbn_check_update', array( $this, 'ajax_check_update' ) );
+		add_action( 'admin_footer-plugins.php', array( $this, 'check_update_script' ) );
 	}
 
 	/**
@@ -241,5 +246,111 @@ class NPBN_Cookie_Updater {
 		activate_plugin( $this->basename );
 
 		return $result;
+	}
+
+	/**
+	 * Add "Check for updates" action link on the plugins page.
+	 *
+	 * @param array $links Existing action links.
+	 * @return array
+	 */
+	public function add_check_update_link( $links ) {
+		$links['check_update'] = sprintf(
+			'<a href="#" id="npbn-check-update" style="color:#2271b1;">%s</a>',
+			esc_html__( 'Check for updates', 'npbn-cookie-consent' )
+		);
+		return $links;
+	}
+
+	/**
+	 * AJAX handler — force-check GitHub for updates.
+	 */
+	public function ajax_check_update() {
+		check_ajax_referer( 'npbn_check_update', 'nonce' );
+
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			wp_send_json_error( 'Permission denied.' );
+		}
+
+		// Clear cached release so we hit GitHub fresh.
+		delete_transient( 'npbn_cookie_github_release' );
+		$this->release = null;
+
+		$remote_version = $this->get_remote_version();
+
+		if ( ! $remote_version ) {
+			wp_send_json_error( __( 'Could not reach GitHub.', 'npbn-cookie-consent' ) );
+		}
+
+		$has_update = version_compare( $remote_version, $this->version, '>' );
+
+		// Also refresh the core update_plugins transient so WP shows the update row.
+		if ( $has_update ) {
+			$transient = get_site_transient( 'update_plugins' );
+			if ( ! is_object( $transient ) ) {
+				$transient = new stdClass();
+			}
+			if ( ! isset( $transient->checked ) ) {
+				$transient->checked = array();
+			}
+			$transient->checked[ $this->basename ] = $this->version;
+			$transient = $this->check_update( $transient );
+			set_site_transient( 'update_plugins', $transient );
+		}
+
+		wp_send_json_success(
+			array(
+				'current'    => $this->version,
+				'latest'     => $remote_version,
+				'has_update' => $has_update,
+			)
+		);
+	}
+
+	/**
+	 * Inline script for the "Check for updates" AJAX call on plugins.php.
+	 */
+	public function check_update_script() {
+		$nonce = wp_create_nonce( 'npbn_check_update' );
+		?>
+		<script>
+		(function(){
+			var link = document.getElementById('npbn-check-update');
+			if (!link) return;
+			link.addEventListener('click', function(e){
+				e.preventDefault();
+				link.textContent = '<?php echo esc_js( __( 'Checking…', 'npbn-cookie-consent' ) ); ?>';
+				link.style.pointerEvents = 'none';
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', ajaxurl);
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				xhr.onload = function(){
+					try {
+						var res = JSON.parse(xhr.responseText);
+						if (res.success && res.data.has_update) {
+							link.textContent = '<?php echo esc_js( __( 'Update available: v', 'npbn-cookie-consent' ) ); ?>' + res.data.latest;
+							link.style.color = '#d63638';
+							link.style.fontWeight = 'bold';
+							link.style.pointerEvents = 'auto';
+							link.addEventListener('click', function(){ location.reload(); });
+						} else if (res.success) {
+							link.textContent = '<?php echo esc_js( __( 'You have the latest version', 'npbn-cookie-consent' ) ); ?> (v' + res.data.current + ')';
+							link.style.color = '#00a32a';
+							setTimeout(function(){ link.textContent = '<?php echo esc_js( __( 'Check for updates', 'npbn-cookie-consent' ) ); ?>'; link.style.color = '#2271b1'; link.style.pointerEvents = 'auto'; }, 5000);
+						} else {
+							link.textContent = res.data || '<?php echo esc_js( __( 'Check failed', 'npbn-cookie-consent' ) ); ?>';
+							link.style.color = '#d63638';
+							setTimeout(function(){ link.textContent = '<?php echo esc_js( __( 'Check for updates', 'npbn-cookie-consent' ) ); ?>'; link.style.color = '#2271b1'; link.style.pointerEvents = 'auto'; }, 3000);
+						}
+					} catch(err) {
+						link.textContent = '<?php echo esc_js( __( 'Check failed', 'npbn-cookie-consent' ) ); ?>';
+						link.style.color = '#d63638';
+					}
+				};
+				xhr.send('action=npbn_check_update&nonce=<?php echo esc_js( $nonce ); ?>');
+			});
+		})();
+		</script>
+		<?php
 	}
 }
