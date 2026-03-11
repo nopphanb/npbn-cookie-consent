@@ -139,22 +139,22 @@ final class NPBN_Cookie_Consent {
 				'showSettingsBtn'  => $this->get_setting( 'show_settings_btn' ) !== '0',
 				'categories'       => array(
 					'necessary'  => array(
-						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Strictly Necessary' : 'คุกกี้ที่จำเป็นอย่างยิ่ง',
+						'label'       => 'en' === $this->get_current_language() ? 'Strictly Necessary' : 'คุกกี้ที่จำเป็นอย่างยิ่ง',
 						'description' => $this->get_setting( 'category_desc_necessary' ),
 						'required'    => true,
 					),
 					'functional' => array(
-						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Functional' : 'คุกกี้เพื่อการตั้งค่า',
+						'label'       => 'en' === $this->get_current_language() ? 'Functional' : 'คุกกี้เพื่อการตั้งค่า',
 						'description' => $this->get_setting( 'category_desc_functional' ),
 						'required'    => false,
 					),
 					'analytics'  => array(
-						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Analytics' : 'คุกกี้เพื่อการวิเคราะห์และวัดผล',
+						'label'       => 'en' === $this->get_current_language() ? 'Analytics' : 'คุกกี้เพื่อการวิเคราะห์และวัดผล',
 						'description' => $this->get_setting( 'category_desc_analytics' ),
 						'required'    => false,
 					),
 					'marketing'  => array(
-						'label'       => 'en' === $this->get_setting( 'plugin_language' ) ? 'Marketing' : 'คุกกี้เพื่อการตลาด',
+						'label'       => 'en' === $this->get_current_language() ? 'Marketing' : 'คุกกี้เพื่อการตลาด',
 						'description' => $this->get_setting( 'category_desc_marketing' ),
 						'required'    => false,
 					),
@@ -164,7 +164,7 @@ final class NPBN_Cookie_Consent {
 					'savePreferences' => $this->get_setting( 'save_preferences_text' ),
 					'acceptAll'       => $this->get_setting( 'accept_text' ),
 					'rejectAll'       => $this->get_setting( 'reject_all_text' ),
-					'alwaysOn'        => 'en' === $this->get_setting( 'plugin_language' ) ? 'Always On' : 'เปิดใช้งานเสมอ',
+					'alwaysOn'        => 'en' === $this->get_current_language() ? 'Always On' : 'เปิดใช้งานเสมอ',
 				),
 			)
 		);
@@ -174,22 +174,110 @@ final class NPBN_Cookie_Consent {
 	 * Output inline CSS custom properties from settings.
 	 */
 	public function inline_styles() {
-		$bg       = $this->get_setting( 'bg_color', '#ffffff' );
-		$text     = $this->get_setting( 'text_color', '#333333' );
-		$btn_bg   = $this->get_setting( 'btn_accept_bg', '#16a34a' );
-		$btn_text = $this->get_setting( 'btn_accept_text', '#ffffff' );
-		$blur     = $this->get_setting( 'backdrop_blur' );
+		if ( '1' === $this->get_setting( 'use_theme_colors', '0' ) ) {
+			$colors   = self::get_theme_colors();
+			$bg       = $colors['bg'];
+			$text     = $colors['text'];
+			$btn_bg   = $colors['accent'];
+			$btn_text = $colors['accent_text'];
+		} else {
+			$bg       = $this->get_setting( 'bg_color', '#ffffff' );
+			$text     = $this->get_setting( 'text_color', '#333333' );
+			$btn_bg   = $this->get_setting( 'btn_accept_bg', '#16a34a' );
+			$btn_text = $this->get_setting( 'btn_accept_text', '#ffffff' );
+		}
 
-		$blur_val = ( '1' === $blur ) ? 'blur(8px)' : 'none';
+		$blur     = $this->get_setting( 'backdrop_blur' );
+		$blur_val = ( '1' === $blur ) ? '8px' : '0px';
 
 		printf(
-			'<style id="npbn-cookie-consent-vars">#npbn-cookie-banner,#npbn-cookie-modal{--npbn-bg:%s;--npbn-text:%s;--npbn-btn-accept-bg:%s;--npbn-btn-accept-text:%s;--npbn-backdrop-blur:%s}</style>',
+			'<style id="npbn-cookie-consent-vars">#npbn-cookie-banner,#npbn-cookie-modal{--npbn-bg:%s;--npbn-text:%s;--npbn-btn-accept-bg:%s;--npbn-btn-accept-text:%s;--npbn-backdrop-blur-amount:%s}.npbn-cookie-settings-btn{--npbn-bg:%s;--npbn-text:%s}</style>',
 			esc_attr( $bg ),
 			esc_attr( $text ),
 			esc_attr( $btn_bg ),
 			esc_attr( $btn_text ),
-			esc_attr( $blur_val )
+			esc_attr( $blur_val ),
+			esc_attr( $bg ),
+			esc_attr( $text )
 		);
+	}
+
+	/**
+	 * Get colors from the active theme.
+	 *
+	 * Tries: wp_get_global_styles() (block themes) → Customizer → sensible defaults.
+	 *
+	 * @return array { bg, text, accent, accent_text }
+	 */
+	public static function get_theme_colors() {
+		$bg          = '#ffffff';
+		$text        = '#333333';
+		$accent      = '#16a34a';
+		$accent_text = '#ffffff';
+
+		// Block themes (WordPress 5.9+): read from theme.json / global styles.
+		if ( function_exists( 'wp_get_global_styles' ) ) {
+			$styles = wp_get_global_styles();
+
+			if ( ! empty( $styles['color']['background'] ) ) {
+				$bg = $styles['color']['background'];
+			}
+			if ( ! empty( $styles['color']['text'] ) ) {
+				$text = $styles['color']['text'];
+			}
+
+			// Try to find an accent / primary color from the palette.
+			if ( function_exists( 'wp_get_global_settings' ) ) {
+				$settings = wp_get_global_settings( array( 'color', 'palette', 'theme' ) );
+				if ( is_array( $settings ) ) {
+					foreach ( $settings as $swatch ) {
+						if ( ! empty( $swatch['slug'] ) && ! empty( $swatch['color'] ) ) {
+							$slug = strtolower( $swatch['slug'] );
+							if ( in_array( $slug, array( 'primary', 'accent', 'vivid-green-cyan', 'luminous-vivid-amber' ), true ) ) {
+								$accent = $swatch['color'];
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Customizer fallbacks (classic themes).
+		$custom_bg = get_background_color();
+		if ( $custom_bg && '#ffffff' === $bg ) {
+			$bg = '#' . ltrim( $custom_bg, '#' );
+		}
+
+		$header_text_color = get_theme_mod( 'header_textcolor' );
+		if ( $header_text_color && 'blank' !== $header_text_color && '#333333' === $text ) {
+			$text = '#' . ltrim( $header_text_color, '#' );
+		}
+
+		// Determine button text color by accent luminance.
+		$accent_text = self::is_color_light( $accent ) ? '#333333' : '#ffffff';
+
+		return compact( 'bg', 'text', 'accent', 'accent_text' );
+	}
+
+	/**
+	 * Check if a hex color is light (luminance > 0.5).
+	 *
+	 * @param string $hex Hex color.
+	 * @return bool
+	 */
+	private static function is_color_light( $hex ) {
+		$hex = ltrim( $hex, '#' );
+		if ( 3 === strlen( $hex ) ) {
+			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+		}
+		$r = hexdec( substr( $hex, 0, 2 ) ) / 255;
+		$g = hexdec( substr( $hex, 2, 2 ) ) / 255;
+		$b = hexdec( substr( $hex, 4, 2 ) ) / 255;
+
+		// Relative luminance (sRGB).
+		$luminance = 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+		return $luminance > 0.5;
 	}
 
 	/**
@@ -315,8 +403,8 @@ final class NPBN_Cookie_Consent {
 			<button type="button"
 					id="npbn-cookie-settings-btn"
 					class="npbn-cookie-settings-btn"
-					aria-label="<?php esc_attr_e( 'Cookie settings', 'npbn-cookie-consent' ); ?>">
-				<?php echo 'en' === $this->get_setting( 'plugin_language' ) ? esc_html( 'Manage Cookie Preferences' ) : esc_html( 'เปลี่ยนการตั้งค่าคุกกี้' ); ?>
+					aria-label="<?php echo 'en' === $this->get_current_language() ? esc_attr( 'Manage Cookie Preferences' ) : esc_attr( 'เปลี่ยนการตั้งค่าคุกกี้' ); ?>">
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 12.5v.01"/><path d="M12 16v.01"/><path d="M11 12.5v.01"/><path d="M8 14v.01"/></svg>
 			</button>
 		<?php endif; ?>
 		<?php
@@ -364,14 +452,22 @@ final class NPBN_Cookie_Consent {
 	 */
 	public static function get_defaults( $lang = null ) {
 		if ( null === $lang ) {
-			$settings = get_option( 'npbn_cookie_consent_settings', array() );
-			$lang     = $settings['plugin_language'] ?? 'th';
+			// WPML / Polylang detection for static context.
+			if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
+				$lang = ICL_LANGUAGE_CODE;
+			} elseif ( function_exists( 'pll_current_language' ) ) {
+				$lang = pll_current_language( 'slug' ) ?: 'th';
+			} else {
+				$settings = get_option( 'npbn_cookie_consent_settings', array() );
+				$lang     = $settings['plugin_language'] ?? 'th';
+			}
 		}
 
 		$shared = array(
 			'plugin_language'        => 'th',
 			'privacy_url'            => '',
 			'position'               => 'bottom',
+			'use_theme_colors'       => '0',
 			'bg_color'               => '#ffffff',
 			'text_color'             => '#333333',
 			'btn_accept_bg'          => '#16a34a',
@@ -417,6 +513,31 @@ final class NPBN_Cookie_Consent {
 		$lang_text = $text[ $lang ] ?? $text['th'];
 
 		return array_merge( $shared, $lang_text );
+	}
+
+	/**
+	 * Get the current frontend language.
+	 *
+	 * Checks WPML / Polylang first, then falls back to the plugin_language setting.
+	 *
+	 * @return string Two-letter language code (e.g. 'th', 'en').
+	 */
+	public function get_current_language() {
+		// WPML.
+		if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
+			return ICL_LANGUAGE_CODE;
+		}
+
+		// Polylang.
+		if ( function_exists( 'pll_current_language' ) ) {
+			$lang = pll_current_language( 'slug' );
+			if ( $lang ) {
+				return $lang;
+			}
+		}
+
+		// Fallback: plugin setting.
+		return $this->settings['plugin_language'] ?? 'th';
 	}
 
 	/**

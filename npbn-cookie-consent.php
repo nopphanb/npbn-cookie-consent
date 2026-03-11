@@ -3,7 +3,7 @@
  * Plugin Name: NPBN Cookie Consent
  * Plugin URI:  https://npbn.me
  * Description: PDPA-compliant cookie consent banner. Auto-blocks third-party tracking scripts until consent is given.
- * Version:     1.5.0
+ * Version:     1.6.0
  * Author:      Nopphan Bunnag
  * Author URI:  https://npbn.me
  * Text Domain: npbn-cookie-consent
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'NPBN_COOKIE_CONSENT_VERSION', '1.5.0' );
+define( 'NPBN_COOKIE_CONSENT_VERSION', '1.6.0' );
 define( 'NPBN_COOKIE_CONSENT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NPBN_COOKIE_CONSENT_URL', plugin_dir_url( __FILE__ ) );
 define( 'NPBN_COOKIE_CONSENT_BASENAME', plugin_basename( __FILE__ ) );
@@ -30,7 +30,7 @@ function npbn_cookie_consent_init() {
 	load_plugin_textdomain( 'npbn-cookie-consent', false, dirname( NPBN_COOKIE_CONSENT_BASENAME ) . '/languages' );
 
 	// Ensure DB table exists (handles upgrades without re-activation).
-	if ( get_option( 'npbn_cookie_consent_db_version' ) !== '1.5.0' ) {
+	if ( get_option( 'npbn_cookie_consent_db_version' ) !== '1.6.0' ) {
 		npbn_cookie_consent_activate();
 	}
 
@@ -91,7 +91,7 @@ function npbn_cookie_consent_activate() {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	dbDelta( $sql );
 
-	update_option( 'npbn_cookie_consent_db_version', '1.5.0' );
+	update_option( 'npbn_cookie_consent_db_version', '1.6.0' );
 }
 register_activation_hook( __FILE__, 'npbn_cookie_consent_activate' );
 

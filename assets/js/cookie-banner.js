@@ -522,24 +522,6 @@
 	   ========================================================== */
 
 	function init() {
-		var consent = getConsent();
-
-		if (consent) {
-			var allAccepted = consent.functional && consent.analytics && consent.marketing;
-			if (allAccepted) {
-				showSettingsBtn();
-				return;
-			}
-
-			// Partial or fully rejected — keep observer running.
-			activeObserver = startObserver();
-			showSettingsBtn();
-		} else {
-			// No consent — block all, show banner.
-			activeObserver = startObserver();
-			showBanner();
-		}
-
 		// Bind banner buttons.
 		var acceptBtn = document.getElementById('npbn-cookie-accept');
 		var rejectAllBtn = document.getElementById('npbn-cookie-reject-all');
@@ -576,6 +558,24 @@
 
 		// Initialize shortcode toggles if present on page.
 		initShortcode();
+
+		var consent = getConsent();
+		if (consent) {
+			var allAccepted = consent.functional && consent.analytics && consent.marketing;
+			if (allAccepted) {
+				showSettingsBtn();
+				return;
+			}
+
+			// Partial or fully rejected — keep observer running.
+			activeObserver = startObserver();
+			showSettingsBtn();
+			return;
+		}
+
+		// No consent — block all, show banner.
+		activeObserver = startObserver();
+		showBanner();
 	}
 
 	// Expose revoke function for developers.

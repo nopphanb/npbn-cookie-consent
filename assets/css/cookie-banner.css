@@ -27,6 +27,7 @@
 	opacity: 0;
 	transform: translateY(20px);
 	visibility: hidden;
+	pointer-events: none;
 	transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
 }
 
@@ -38,6 +39,7 @@
 	opacity: 1;
 	transform: translateY(0);
 	visibility: visible;
+	pointer-events: auto;
 }
 
 #npbn-cookie-banner *,
@@ -231,32 +233,35 @@
 	position: fixed;
 	bottom: 16px;
 	left: 16px;
-	z-index: 999998;
-	padding: 7px 14px;
+	z-index: 1000001;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
 	background-color: var(--npbn-bg, #ffffff);
 	color: var(--npbn-text, #333333);
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 20px;
-	font-size: 11px;
-	font-weight: 500;
+	border-radius: 50%;
 	cursor: pointer;
-	font-family: inherit;
-	line-height: 1.2;
-	min-height: 30px;
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+	transform: scale(1);
 	opacity: 0;
 	visibility: hidden;
-	transition: opacity 0.3s ease, visibility 0.3s, transform 0.2s ease;
+	pointer-events: none;
+	transition: opacity 0.3s ease, visibility 0.3s, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .npbn-cookie-settings-btn.npbn-cookie-settings-btn--visible {
 	opacity: 1;
 	visibility: visible;
+	pointer-events: auto;
 }
 
 .npbn-cookie-settings-btn:hover {
-	transform: translateY(-1px);
-	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+	transform: scale(1.06);
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 
 .npbn-cookie-settings-btn:focus-visible {
@@ -348,6 +353,7 @@
 	justify-content: center;
 	opacity: 0;
 	visibility: hidden;
+	pointer-events: none;
 	transition: opacity 0.3s ease, visibility 0.3s;
 	font-family: inherit;
 	font-size: 13px;
@@ -357,6 +363,7 @@
 .npbn-cookie-modal--visible {
 	opacity: 1;
 	visibility: visible;
+	pointer-events: auto;
 }
 
 .npbn-cookie-modal *,
@@ -371,9 +378,16 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
+	background: rgba(0, 0, 0, 0);
+	-webkit-backdrop-filter: blur(0px);
+	backdrop-filter: blur(0px);
+	transition: background-color 0.3s ease, -webkit-backdrop-filter 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.npbn-cookie-modal--visible .npbn-cookie-modal__overlay {
 	background: rgba(0, 0, 0, 0.4);
-	-webkit-backdrop-filter: var(--npbn-backdrop-blur, none);
-	backdrop-filter: var(--npbn-backdrop-blur, none);
+	-webkit-backdrop-filter: blur(var(--npbn-backdrop-blur-amount, 0px));
+	backdrop-filter: blur(var(--npbn-backdrop-blur-amount, 0px));
 }
 
 .npbn-cookie-modal__dialog {

@@ -4,10 +4,394 @@
  * @package NPBN_Cookie_Consent
  */
 
-.form-table .npbn-color-picker {
+/* ----------------------------------------------------------------
+   Tabs
+   ---------------------------------------------------------------- */
+.npbn-admin-tabs {
+	display: flex;
+	gap: 0;
+	border-bottom: 2px solid #c3c4c7;
+	margin: 20px 0 0;
+}
+
+.npbn-admin-tabs .npbn-tab {
+	padding: 10px 20px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #50575e;
+	background: none;
+	border: none;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -2px;
+	cursor: pointer;
+	transition: color 0.15s, border-color 0.15s;
+}
+
+.npbn-admin-tabs .npbn-tab:hover {
+	color: #1d2327;
+}
+
+.npbn-admin-tabs .npbn-tab.active {
+	color: #2271b1;
+	border-bottom-color: #2271b1;
+	font-weight: 600;
+}
+
+/* ----------------------------------------------------------------
+   Tab panels
+   ---------------------------------------------------------------- */
+.npbn-tab-panel {
+	display: none;
+	animation: npbnFadeIn 0.2s ease;
+}
+
+.npbn-tab-panel.active {
+	display: block;
+}
+
+@keyframes npbnFadeIn {
+	from { opacity: 0; transform: translateY(4px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ----------------------------------------------------------------
+   Cards
+   ---------------------------------------------------------------- */
+.npbn-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 8px;
+	padding: 24px 28px;
+	margin: 20px 0;
+	max-width: 800px;
+}
+
+.npbn-card h2 {
+	font-size: 15px;
+	font-weight: 600;
+	color: #1d2327;
+	margin: 0 0 4px;
+	padding: 0;
+}
+
+.npbn-card .npbn-card-desc {
+	font-size: 13px;
+	color: #646970;
+	margin: 0 0 20px;
+}
+
+.npbn-card + .npbn-card {
+	margin-top: 16px;
+}
+
+/* ----------------------------------------------------------------
+   Form fields inside cards
+   ---------------------------------------------------------------- */
+.npbn-card .form-table {
+	margin-top: 0;
+}
+
+.npbn-card .form-table th {
+	padding: 12px 10px 12px 0;
+	font-weight: 500;
+	font-size: 13px;
+	color: #1d2327;
+	width: 200px;
+}
+
+.npbn-card .form-table td {
+	padding: 10px;
+}
+
+.npbn-card .form-table input[type="text"],
+.npbn-card .form-table input[type="url"],
+.npbn-card .form-table input[type="number"],
+.npbn-card .form-table select {
+	border-radius: 6px;
+	border: 1px solid #c3c4c7;
+	padding: 6px 10px;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.npbn-card .form-table input[type="text"]:focus,
+.npbn-card .form-table input[type="url"]:focus,
+.npbn-card .form-table input[type="number"]:focus,
+.npbn-card .form-table select:focus {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: none;
+}
+
+.npbn-card .form-table textarea {
+	border-radius: 6px;
+	border: 1px solid #c3c4c7;
+	padding: 8px 10px;
+	max-width: 100%;
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.npbn-card .form-table textarea:focus {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: none;
+}
+
+.npbn-card .form-table .npbn-color-picker {
 	width: 80px;
 }
 
-.form-table textarea.large-text {
-	max-width: 600px;
+/* Toggle switch */
+.npbn-toggle-label {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	line-height: 1.5;
+	cursor: pointer;
+}
+
+.npbn-toggle {
+	position: relative;
+	display: inline-block;
+	width: 40px;
+	height: 22px;
+	flex-shrink: 0;
+}
+
+.npbn-toggle input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+.npbn-toggle-slider {
+	position: absolute;
+	inset: 0;
+	background-color: #c3c4c7;
+	border-radius: 22px;
+	transition: background-color 0.2s ease;
+	cursor: pointer;
+}
+
+.npbn-toggle-slider::before {
+	content: "";
+	position: absolute;
+	left: 3px;
+	top: 3px;
+	width: 16px;
+	height: 16px;
+	background: #fff;
+	border-radius: 50%;
+	transition: transform 0.2s ease;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.npbn-toggle input:checked + .npbn-toggle-slider {
+	background-color: #2271b1;
+}
+
+.npbn-toggle input:checked + .npbn-toggle-slider::before {
+	transform: translateX(18px);
+}
+
+.npbn-toggle input:focus-visible + .npbn-toggle-slider {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+/* ----------------------------------------------------------------
+   Color grid — show colors in a 2x2 grid
+   ---------------------------------------------------------------- */
+.npbn-color-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+	max-width: 500px;
+}
+
+.npbn-color-grid .npbn-color-item {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.npbn-color-grid .npbn-color-item label {
+	font-size: 13px;
+	font-weight: 500;
+	color: #1d2327;
+	display: block;
+}
+
+/* ----------------------------------------------------------------
+   Tools section (reset buttons)
+   ---------------------------------------------------------------- */
+.npbn-tool-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 8px;
+	padding: 20px 24px;
+	margin: 16px 0;
+	max-width: 800px;
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+}
+
+.npbn-tool-card .npbn-tool-icon {
+	font-size: 24px;
+	line-height: 1;
+	flex-shrink: 0;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background: #f0f0f1;
+}
+
+.npbn-tool-card .npbn-tool-body {
+	flex: 1;
+}
+
+.npbn-tool-card .npbn-tool-body h3 {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0 0 4px;
+	color: #1d2327;
+}
+
+.npbn-tool-card .npbn-tool-body p {
+	font-size: 13px;
+	color: #646970;
+	margin: 0 0 12px;
+}
+
+.npbn-tool-card .button {
+	border-radius: 6px;
+}
+
+/* ----------------------------------------------------------------
+   Live preview
+   ---------------------------------------------------------------- */
+.npbn-preview-box {
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	padding: 20px;
+	margin: 16px 0 0;
+	background: #f6f7f7;
+	max-width: 500px;
+}
+
+.npbn-preview-box h4 {
+	font-size: 13px;
+	font-weight: 600;
+	margin: 0 0 12px;
+	color: #646970;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.npbn-preview-banner {
+	border-radius: 12px;
+	padding: 20px;
+	font-family: inherit;
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.npbn-preview-banner .npbn-preview-heading {
+	font-size: 16px;
+	font-weight: 600;
+	margin: 0 0 8px;
+}
+
+.npbn-preview-banner .npbn-preview-text {
+	font-size: 13px;
+	margin: 0 0 14px;
+	opacity: 0.8;
+}
+
+.npbn-preview-banner .npbn-preview-actions {
+	display: flex;
+	gap: 8px;
+}
+
+.npbn-preview-banner .npbn-preview-actions button {
+	padding: 8px 16px;
+	border-radius: 8px;
+	border: none;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: default;
+}
+
+.npbn-preview-banner .npbn-preview-btn-accept {
+	transition: background-color 0.2s, color 0.2s;
+}
+
+.npbn-preview-banner .npbn-preview-btn-settings {
+	background: transparent;
+	border: 1px solid currentColor;
+	opacity: 0.6;
+}
+
+/* ----------------------------------------------------------------
+   Page header
+   ---------------------------------------------------------------- */
+.npbn-admin-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 4px;
+}
+
+.npbn-header-icon {
+	color: #2271b1;
+	flex-shrink: 0;
+}
+
+.npbn-admin-header h1 {
+	margin: 0;
+	padding: 0;
+}
+
+/* ----------------------------------------------------------------
+   Submit button override
+   ---------------------------------------------------------------- */
+.npbn-card .submit {
+	margin: 0;
+	padding: 16px 0 0;
+}
+
+.npbn-card .submit .button-primary {
+	border-radius: 6px;
+	padding: 6px 24px;
+	font-size: 13px;
+}
+
+/* ----------------------------------------------------------------
+   Responsive
+   ---------------------------------------------------------------- */
+@media (max-width: 782px) {
+	.npbn-admin-tabs .npbn-tab {
+		padding: 8px 14px;
+		font-size: 13px;
+	}
+
+	.npbn-card {
+		padding: 16px;
+	}
+
+	.npbn-card .form-table th {
+		width: auto;
+	}
+
+	.npbn-color-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.npbn-tool-card {
+		flex-direction: column;
+		gap: 12px;
+	}
 }

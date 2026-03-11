@@ -40,7 +40,7 @@ class NPBN_Cookie_Admin {
 			'manage_options',
 			'npbn-cookie-consent',
 			array( $this, 'render_settings_page' ),
-			'dashicons-shield',
+			'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 12.5v.01"/><path d="M12 16v.01"/><path d="M11 12.5v.01"/><path d="M8 14v.01"/></svg>' ),
 			81
 		);
 
@@ -429,6 +429,7 @@ class NPBN_Cookie_Admin {
 		$sanitized['cookie_expiry']      = min( 730, max( 1, absint( $input['cookie_expiry'] ?? 365 ) ) );
 		$sanitized['show_settings_btn']      = ! empty( $input['show_settings_btn'] ) ? '1' : '0';
 		$sanitized['show_reject_all_banner'] = ! empty( $input['show_reject_all_banner'] ) ? '1' : '0';
+		$sanitized['use_theme_colors']       = ! empty( $input['use_theme_colors'] ) ? '1' : '0';
 		$sanitized['banner_full_width']      = ! empty( $input['banner_full_width'] ) ? '1' : '0';
 		$sanitized['backdrop_blur']          = ! empty( $input['backdrop_blur'] ) ? '1' : '0';
 
@@ -450,7 +451,7 @@ class NPBN_Cookie_Admin {
 	}
 
 	/**
-	 * Render the settings page.
+	 * Render the settings page with tabbed UI.
 	 */
 	public function render_settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -458,37 +459,228 @@ class NPBN_Cookie_Admin {
 		}
 		?>
 		<div class="wrap">
-			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+			<div class="npbn-admin-header">
+				<svg class="npbn-header-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 12.5v.01"/><path d="M12 16v.01"/><path d="M11 12.5v.01"/><path d="M8 14v.01"/></svg>
+				<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+			</div>
 
 			<?php $this->maybe_show_privacy_notice(); ?>
 
+			<nav class="npbn-admin-tabs">
+				<button type="button" class="npbn-tab active" data-tab="content"><?php esc_html_e( 'Content', 'npbn-cookie-consent' ); ?></button>
+				<button type="button" class="npbn-tab" data-tab="appearance"><?php esc_html_e( 'Appearance', 'npbn-cookie-consent' ); ?></button>
+				<button type="button" class="npbn-tab" data-tab="categories"><?php esc_html_e( 'Categories', 'npbn-cookie-consent' ); ?></button>
+				<button type="button" class="npbn-tab" data-tab="settings"><?php esc_html_e( 'Settings', 'npbn-cookie-consent' ); ?></button>
+				<button type="button" class="npbn-tab" data-tab="tools"><?php esc_html_e( 'Tools', 'npbn-cookie-consent' ); ?></button>
+			</nav>
+
 			<form action="options.php" method="post">
-				<?php
-				settings_fields( $this->option_key );
-				do_settings_sections( 'npbn-cookie-consent' );
-				submit_button();
-				?>
+				<?php settings_fields( $this->option_key ); ?>
+
+				<?php // --- Tab: Content --- ?>
+				<div id="npbn-panel-content" class="npbn-tab-panel active">
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Banner Content', 'npbn-cookie-consent' ); ?></h2>
+						<p class="npbn-card-desc"><?php esc_html_e( 'Customize the text and buttons visitors see on the cookie consent banner.', 'npbn-cookie-consent' ); ?></p>
+						<table class="form-table" role="presentation">
+							<?php $this->render_field_row( __( 'Heading', 'npbn-cookie-consent' ), 'banner_heading', 'text' ); ?>
+							<?php $this->render_field_row( __( 'Message', 'npbn-cookie-consent' ), 'banner_text', 'textarea' ); ?>
+							<?php $this->render_field_row( __( 'Accept Button', 'npbn-cookie-consent' ), 'accept_text', 'text' ); ?>
+							<?php $this->render_field_row( __( 'Settings Button', 'npbn-cookie-consent' ), 'reject_text', 'text' ); ?>
+							<?php $this->render_field_row( __( 'Reject All Button', 'npbn-cookie-consent' ), 'reject_all_text', 'text' ); ?>
+						</table>
+					</div>
+
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Settings Modal', 'npbn-cookie-consent' ); ?></h2>
+						<p class="npbn-card-desc"><?php esc_html_e( 'Text shown in the granular cookie settings popup.', 'npbn-cookie-consent' ); ?></p>
+						<table class="form-table" role="presentation">
+							<?php $this->render_field_row( __( 'Modal Title', 'npbn-cookie-consent' ), 'settings_modal_title', 'text' ); ?>
+							<?php $this->render_field_row( __( 'Save Button', 'npbn-cookie-consent' ), 'save_preferences_text', 'text' ); ?>
+						</table>
+					</div>
+
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Privacy Policy', 'npbn-cookie-consent' ); ?></h2>
+						<p class="npbn-card-desc"><?php esc_html_e( 'Link shown on the banner. Leave URL empty to use the WordPress privacy policy page.', 'npbn-cookie-consent' ); ?></p>
+						<table class="form-table" role="presentation">
+							<?php $this->render_field_row( __( 'Link Text', 'npbn-cookie-consent' ), 'privacy_link_text', 'text' ); ?>
+							<?php $this->render_field_row( __( 'URL', 'npbn-cookie-consent' ), 'privacy_url', 'url' ); ?>
+						</table>
+					</div>
+
+					<?php submit_button(); ?>
+				</div>
+
+				<?php // --- Tab: Appearance --- ?>
+				<div id="npbn-panel-appearance" class="npbn-tab-panel">
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Layout', 'npbn-cookie-consent' ); ?></h2>
+						<table class="form-table" role="presentation">
+							<?php
+							$this->render_field_row(
+								__( 'Banner Position', 'npbn-cookie-consent' ),
+								'position',
+								'select',
+								array(
+									'options' => array(
+										'bottom' => __( 'Bottom Bar', 'npbn-cookie-consent' ),
+										'top'    => __( 'Top Bar', 'npbn-cookie-consent' ),
+										'modal'  => __( 'Floating Modal', 'npbn-cookie-consent' ),
+									),
+								)
+							);
+							?>
+							<?php $this->render_field_row( __( 'Full Width Banner', 'npbn-cookie-consent' ), 'banner_full_width', 'checkbox', array( 'description' => __( 'Display as an edge-to-edge bar instead of a floating card.', 'npbn-cookie-consent' ) ) ); ?>
+							<?php $this->render_field_row( __( 'Backdrop Blur', 'npbn-cookie-consent' ), 'backdrop_blur', 'checkbox', array( 'description' => __( 'Blur the background when the settings modal is open.', 'npbn-cookie-consent' ) ) ); ?>
+						</table>
+					</div>
+
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Colors', 'npbn-cookie-consent' ); ?></h2>
+						<table class="form-table" role="presentation">
+							<?php $this->render_field_row( __( 'Use Theme Colors', 'npbn-cookie-consent' ), 'use_theme_colors', 'checkbox', array( 'description' => __( 'Automatically use colors from your active theme instead of custom colors below.', 'npbn-cookie-consent' ) ) ); ?>
+						</table>
+						<?php
+						$theme_colors     = NPBN_Cookie_Consent::get_theme_colors();
+						$use_theme        = '1' === $this->get_value( 'use_theme_colors' );
+						$color_grid_style = $use_theme ? ' style="display:none;"' : '';
+						?>
+						<div class="npbn-color-grid" id="npbn-custom-colors"<?php echo $color_grid_style; ?>>
+							<div class="npbn-color-item">
+								<label><?php esc_html_e( 'Background', 'npbn-cookie-consent' ); ?></label>
+								<?php $this->render_color_input( 'bg_color' ); ?>
+							</div>
+							<div class="npbn-color-item">
+								<label><?php esc_html_e( 'Text', 'npbn-cookie-consent' ); ?></label>
+								<?php $this->render_color_input( 'text_color' ); ?>
+							</div>
+							<div class="npbn-color-item">
+								<label><?php esc_html_e( 'Accept Button', 'npbn-cookie-consent' ); ?></label>
+								<?php $this->render_color_input( 'btn_accept_bg' ); ?>
+							</div>
+							<div class="npbn-color-item">
+								<label><?php esc_html_e( 'Accept Button Text', 'npbn-cookie-consent' ); ?></label>
+								<?php $this->render_color_input( 'btn_accept_text' ); ?>
+							</div>
+						</div>
+						<div class="npbn-theme-color-preview" id="npbn-theme-colors"<?php echo $use_theme ? '' : ' style="display:none;"'; ?>>
+							<p class="description" style="margin:0 0 12px;"><?php esc_html_e( 'Colors detected from your active theme:', 'npbn-cookie-consent' ); ?></p>
+							<div style="display:flex;gap:12px;flex-wrap:wrap;">
+								<span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;"><span style="width:20px;height:20px;border-radius:4px;border:1px solid #ccc;background:<?php echo esc_attr( $theme_colors['bg'] ); ?>;display:inline-block;"></span><?php esc_html_e( 'Background', 'npbn-cookie-consent' ); ?></span>
+								<span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;"><span style="width:20px;height:20px;border-radius:4px;border:1px solid #ccc;background:<?php echo esc_attr( $theme_colors['text'] ); ?>;display:inline-block;"></span><?php esc_html_e( 'Text', 'npbn-cookie-consent' ); ?></span>
+								<span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;"><span style="width:20px;height:20px;border-radius:4px;border:1px solid #ccc;background:<?php echo esc_attr( $theme_colors['accent'] ); ?>;display:inline-block;"></span><?php esc_html_e( 'Button', 'npbn-cookie-consent' ); ?></span>
+								<span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;"><span style="width:20px;height:20px;border-radius:4px;border:1px solid #ccc;background:<?php echo esc_attr( $theme_colors['accent_text'] ); ?>;display:inline-block;"></span><?php esc_html_e( 'Button Text', 'npbn-cookie-consent' ); ?></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Preview', 'npbn-cookie-consent' ); ?></h2>
+						<div class="npbn-preview-box">
+							<div class="npbn-preview-banner" style="background-color:<?php echo esc_attr( $this->get_value( 'bg_color' ) ); ?>;color:<?php echo esc_attr( $this->get_value( 'text_color' ) ); ?>;">
+								<div class="npbn-preview-heading"><?php echo esc_html( $this->get_value( 'banner_heading' ) ); ?></div>
+								<div class="npbn-preview-text"><?php echo esc_html( mb_substr( wp_strip_all_tags( $this->get_value( 'banner_text' ) ), 0, 100 ) ); ?>...</div>
+								<div class="npbn-preview-actions">
+									<button type="button" class="npbn-preview-btn-accept" style="background-color:<?php echo esc_attr( $this->get_value( 'btn_accept_bg' ) ); ?>;color:<?php echo esc_attr( $this->get_value( 'btn_accept_text' ) ); ?>;"><?php echo esc_html( $this->get_value( 'accept_text' ) ); ?></button>
+									<button type="button" class="npbn-preview-btn-settings" style="color:<?php echo esc_attr( $this->get_value( 'text_color' ) ); ?>;"><?php echo esc_html( $this->get_value( 'reject_text' ) ); ?></button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<?php submit_button(); ?>
+				</div>
+
+				<?php // --- Tab: Categories --- ?>
+				<div id="npbn-panel-categories" class="npbn-tab-panel">
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Cookie Category Descriptions', 'npbn-cookie-consent' ); ?></h2>
+						<p class="npbn-card-desc"><?php esc_html_e( 'Customize the description shown for each cookie category in the settings modal.', 'npbn-cookie-consent' ); ?></p>
+						<table class="form-table" role="presentation">
+							<?php $this->render_field_row( __( 'Necessary', 'npbn-cookie-consent' ), 'category_desc_necessary', 'textarea' ); ?>
+							<?php $this->render_field_row( __( 'Functional', 'npbn-cookie-consent' ), 'category_desc_functional', 'textarea' ); ?>
+							<?php $this->render_field_row( __( 'Analytics', 'npbn-cookie-consent' ), 'category_desc_analytics', 'textarea' ); ?>
+							<?php $this->render_field_row( __( 'Marketing', 'npbn-cookie-consent' ), 'category_desc_marketing', 'textarea' ); ?>
+						</table>
+					</div>
+
+					<?php submit_button(); ?>
+				</div>
+
+				<?php // --- Tab: Settings --- ?>
+				<div id="npbn-panel-settings" class="npbn-tab-panel">
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'General', 'npbn-cookie-consent' ); ?></h2>
+						<table class="form-table" role="presentation">
+							<?php
+							$this->render_field_row(
+								__( 'Language', 'npbn-cookie-consent' ),
+								'plugin_language',
+								'select',
+								array(
+									'options' => array(
+										'th' => 'ไทย (Thai)',
+										'en' => 'English',
+									),
+								)
+							);
+							$this->render_field_row(
+								__( 'Cookie Expiry (days)', 'npbn-cookie-consent' ),
+								'cookie_expiry',
+								'number',
+								array( 'min' => 1, 'max' => 730 )
+							);
+							?>
+						</table>
+					</div>
+
+					<div class="npbn-card">
+						<h2><?php esc_html_e( 'Visibility', 'npbn-cookie-consent' ); ?></h2>
+						<table class="form-table" role="presentation">
+							<?php $this->render_field_row( __( 'Floating Settings Button', 'npbn-cookie-consent' ), 'show_settings_btn', 'checkbox', array( 'description' => __( 'Show a floating button so visitors can change consent (recommended for PDPA).', 'npbn-cookie-consent' ) ) ); ?>
+							<?php $this->render_field_row( __( 'Reject All on Banner', 'npbn-cookie-consent' ), 'show_reject_all_banner', 'checkbox', array( 'description' => __( 'Show the Reject All button on the banner. It always appears in the settings modal.', 'npbn-cookie-consent' ) ) ); ?>
+						</table>
+					</div>
+
+					<?php submit_button(); ?>
+				</div>
 			</form>
 
-			<hr>
-			<h2><?php esc_html_e( 'Reset Consent', 'npbn-cookie-consent' ); ?></h2>
-			<p class="description"><?php esc_html_e( 'Clear your own consent cookie so the banner appears again on the frontend. Useful for testing.', 'npbn-cookie-consent' ); ?></p>
-			<form method="post" style="margin-top:10px;">
-				<?php wp_nonce_field( 'npbn_reset_consent_action' ); ?>
-				<button type="submit" name="npbn_reset_consent" value="1" class="button">
-					<?php esc_html_e( 'Reset My Consent', 'npbn-cookie-consent' ); ?>
-				</button>
-			</form>
+			<?php // --- Tab: Tools --- ?>
+			<div id="npbn-panel-tools" class="npbn-tab-panel">
+				<div class="npbn-tool-card">
+					<div class="npbn-tool-icon">
+						<span class="dashicons dashicons-update"></span>
+					</div>
+					<div class="npbn-tool-body">
+						<h3><?php esc_html_e( 'Reset My Consent', 'npbn-cookie-consent' ); ?></h3>
+						<p><?php esc_html_e( 'Clear your own consent cookie so the banner appears again on the frontend. Useful for testing.', 'npbn-cookie-consent' ); ?></p>
+						<form method="post">
+							<?php wp_nonce_field( 'npbn_reset_consent_action' ); ?>
+							<button type="submit" name="npbn_reset_consent" value="1" class="button">
+								<?php esc_html_e( 'Reset My Consent', 'npbn-cookie-consent' ); ?>
+							</button>
+						</form>
+					</div>
+				</div>
 
-			<hr>
-			<h2><?php esc_html_e( 'Reset Text to Default', 'npbn-cookie-consent' ); ?></h2>
-			<p class="description"><?php esc_html_e( 'Reset all text fields (banner, buttons, modal, category descriptions) back to their default values. Colors and other settings are not affected.', 'npbn-cookie-consent' ); ?></p>
-			<form method="post" style="margin-top:10px;">
-				<?php wp_nonce_field( 'npbn_reset_defaults_action' ); ?>
-				<button type="submit" name="npbn_reset_defaults" value="1" class="button">
-					<?php esc_html_e( 'Reset Text to Default', 'npbn-cookie-consent' ); ?>
-				</button>
-			</form>
+				<div class="npbn-tool-card">
+					<div class="npbn-tool-icon">
+						<span class="dashicons dashicons-image-rotate"></span>
+					</div>
+					<div class="npbn-tool-body">
+						<h3><?php esc_html_e( 'Reset Text to Default', 'npbn-cookie-consent' ); ?></h3>
+						<p><?php esc_html_e( 'Reset all text fields (banner, buttons, modal, category descriptions) back to their default values. Colors and other settings are not affected.', 'npbn-cookie-consent' ); ?></p>
+						<form method="post">
+							<?php wp_nonce_field( 'npbn_reset_defaults_action' ); ?>
+							<button type="submit" name="npbn_reset_defaults" value="1" class="button">
+								<?php esc_html_e( 'Reset Text to Default', 'npbn-cookie-consent' ); ?>
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
 		<?php
 	}
@@ -946,7 +1138,67 @@ class NPBN_Cookie_Admin {
 	}
 
 	// ------------------------------------------------------------------
-	// Field renderers.
+	// Tabbed UI field helpers.
+	// ------------------------------------------------------------------
+
+	/**
+	 * Render a table row with a field.
+	 *
+	 * @param string $label Label text.
+	 * @param string $key   Setting key.
+	 * @param string $type  Field type: text, textarea, url, number, select, checkbox.
+	 * @param array  $args  Extra args (options, min, max, description).
+	 */
+	private function render_field_row( $label, $key, $type = 'text', $args = array() ) {
+		?>
+		<tr>
+			<th scope="row"><?php echo esc_html( $label ); ?></th>
+			<td>
+				<?php
+				switch ( $type ) {
+					case 'textarea':
+						$this->render_textarea_field( array( 'key' => $key ) );
+						break;
+					case 'url':
+						$this->render_url_field( array( 'key' => $key ) );
+						break;
+					case 'number':
+						$this->render_number_field( array_merge( array( 'key' => $key ), $args ) );
+						break;
+					case 'select':
+						$this->render_select_field( array_merge( array( 'key' => $key ), $args ) );
+						break;
+					case 'checkbox':
+						$this->render_checkbox_field( array_merge( array( 'key' => $key ), $args ) );
+						break;
+					default:
+						$this->render_text_field( array( 'key' => $key ) );
+						break;
+				}
+				?>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Render a standalone color input (used in the color grid).
+	 *
+	 * @param string $key Setting key.
+	 */
+	private function render_color_input( $key ) {
+		$value = $this->get_value( $key );
+		printf(
+			'<input type="text" name="%s[%s]" id="npbn-%s" value="%s" class="npbn-color-picker">',
+			esc_attr( $this->option_key ),
+			esc_attr( $key ),
+			esc_attr( $key ),
+			esc_attr( $value )
+		);
+	}
+
+	// ------------------------------------------------------------------
+	// Field renderers (used by Settings API callbacks and tabbed UI).
 	// ------------------------------------------------------------------
 
 	/**
@@ -1100,7 +1352,7 @@ class NPBN_Cookie_Admin {
 		$checked = ( '1' === $value ) ? 'checked' : '';
 
 		printf(
-			'<label><input type="checkbox" name="%s[%s]" id="npbn-%s" value="1" %s> %s</label>',
+			'<label class="npbn-toggle-label"><span class="npbn-toggle"><input type="checkbox" name="%s[%s]" id="npbn-%s" value="1" %s><span class="npbn-toggle-slider"></span></span> %s</label>',
 			esc_attr( $this->option_key ),
 			esc_attr( $key ),
 			esc_attr( $key ),

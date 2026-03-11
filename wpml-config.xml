@@ -1,0 +1,19 @@
+<wpml-config>
+    <admin-texts>
+        <key name="npbn_cookie_consent_settings">
+            <key name="banner_heading" />
+            <key name="banner_text" />
+            <key name="accept_text" />
+            <key name="reject_text" />
+            <key name="reject_all_text" />
+            <key name="settings_modal_title" />
+            <key name="save_preferences_text" />
+            <key name="privacy_link_text" />
+            <key name="privacy_url" />
+            <key name="category_desc_necessary" />
+            <key name="category_desc_functional" />
+            <key name="category_desc_analytics" />
+            <key name="category_desc_marketing" />
+        </key>
+    </admin-texts>
+</wpml-config>

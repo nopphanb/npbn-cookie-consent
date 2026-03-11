@@ -12,7 +12,9 @@ PDPA-compliant cookie consent banner for WordPress. Auto-blocks third-party trac
 - **Shortcode** — `[npbn_cookie_settings]` renders cookie toggles on any page
 - **Floating settings button** — lets visitors change consent after dismissing the banner
 - **PDPA / GDPR ready** — opt-in model, easy consent withdrawal
+- **Multi-language** — built-in Thai/English switch, WPML & Polylang compatible
 - **Theme font** — inherits the active theme's font family
+- **Full-width & backdrop blur** — optional appearance settings
 - **Auto-update from GitHub** — updates appear in the WordPress dashboard
 
 ## Requirements
@@ -37,6 +39,21 @@ git clone https://github.com/nopphanb/npbn-cookie-consent.git
 
 The plugin checks GitHub Releases for new versions automatically. When a new release is published, you'll see the update in **Dashboard > Updates** just like any wp.org plugin.
 
+## Multi-Language Support
+
+### Built-in Language Switch
+
+Select Thai or English in **Cookie Consent > Settings > Language**. This switches all banner text, button labels, category names, and descriptions.
+
+### WPML / Polylang
+
+The plugin is fully compatible with WPML and Polylang:
+
+- **`wpml-config.xml`** included — all text settings (banner heading, button labels, category descriptions, privacy URL) are automatically registered for translation in WPML's String Translation
+- The plugin detects the current frontend language from WPML/Polylang and serves the correct text
+- Category labels and UI strings adapt per language automatically
+- No extra configuration needed — activate WPML or Polylang and translate the strings
+
 ## Shortcode
 
 Use `[npbn_cookie_settings]` on any page to render cookie category toggles inline. This is useful for a dedicated "Cookie Settings" or "Privacy Policy" page.
@@ -52,11 +69,14 @@ Scripts from these domains are auto-blocked until consent is given:
 
 ## Settings
 
-Configure in **Settings > Cookie Consent**:
+Configure in **Cookie Consent > Settings**:
 
+- Language (Thai / English)
 - Banner text, heading, and button labels
 - Banner position (top, bottom, modal)
 - Colors (background, text, button)
+- Full-width banner option
+- Backdrop blur for settings modal
 - Cookie expiry days
 - Category descriptions
 - Show/hide reject-all on banner
